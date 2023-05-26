@@ -1,20 +1,16 @@
 package dev.hayann;
 
-import javax.swing.*;
-import java.awt.*;
+import dev.hayann.model.Municipio;
+import dev.hayann.repository.MunicipioRepository;
+
+import java.sql.SQLException;
+import java.util.List;
 
 public class Main {
 
-	private final JPanel jPanel = new JPanel();
-	private final JTabbedPane tabbedPane = new JTabbedPane();
-
-	public static void main(String[] args) {
-		Main app = new Main();
-		JFrame frame = new JFrame("Gerenciador Rural");
-		frame.setContentPane(app.jPanel);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(800, 600);
-		frame.setVisible(true);
-		app.jPanel.add(app.tabbedPane);
+	public static void main(String[] args) throws SQLException {
+		MunicipioRepository municipioRepository = new MunicipioRepository();
+		List<Municipio> municipios = municipioRepository.findAll();
+		System.out.println(municipios);
 	}
 }
