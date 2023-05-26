@@ -24,6 +24,7 @@ public class MunicipioRepository {
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
+            connectionPool.releaseConnection(connection);
             if (rs.next()) {
                 return new Municipio(
                         rs.getInt(COLLUMN_ID_MUN),
