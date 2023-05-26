@@ -16,6 +16,27 @@ public class MunicipioRepository {
 
     private final String COLLUMN_UF_MUN = "uf_mun";
 
+    public Municipio findById(int id) {
+        try {
+            String sql = "SELECT id, nome, uf FROM municipios WHERE id = ?";
+            ConnectionPool connectionPool = ConnectionPool.getInstance();
+            Connection connection = connectionPool.getConnection();
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return new Municipio(
+                        rs.getInt(COLLUMN_ID_MUN),
+                        rs.getString(COLLUMN_NAM_MUN),
+                        rs.getString(COLLUMN_UF_MUN)
+                );
+            } else return null;
+        } catch (Exception e) {
+            /* TODO: Criar método de render de erro para renderizar um JDialog de erro na tela */
+            return null;
+        }
+    }
+
     public List<Municipio> findAll() {
         try {
             String sql = "SELECT * FROM MUNICIPIO";
