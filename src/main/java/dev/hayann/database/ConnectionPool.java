@@ -51,10 +51,10 @@ public class ConnectionPool {
             connection = createConnection();
             connectionsPool.add(connection);
             POOL_SIZE++;
+            return connection;
         } else {
             return connectionsPool.remove(connectionsPool.size() - 1);
         }
-        return null;
     }
 
     public synchronized void releaseConnection(Connection connection) {
