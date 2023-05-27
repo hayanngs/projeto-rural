@@ -1,5 +1,6 @@
 package dev.hayann;
 
+import dev.hayann.database.InicializadorDoBD;
 import dev.hayann.model.Municipio;
 import dev.hayann.repository.MunicipioRepository;
 
@@ -9,6 +10,8 @@ import java.util.List;
 public class Main {
 
 	public static void main(String[] args) throws SQLException {
+        InicializadorDoBD.inicializarBancoDeDados();
+
 		MunicipioRepository municipioRepository = new MunicipioRepository();
 		List<Municipio> municipios = municipioRepository.findAll();
 		System.out.println(municipios);
