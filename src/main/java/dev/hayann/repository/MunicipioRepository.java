@@ -58,7 +58,7 @@ public class MunicipioRepository implements Repository<Municipio> {
 
     public void persist(Municipio municipio) {
         try {
-            String sql = String.format("INSERT INTO %s (%s, %s, %s) VALUES (?, ?, ?)", Municipio.TABLE_NAME, Municipio.COLLUMN_ID_NAME, Municipio.COLLUMN_NAME_NAME, Municipio.COLLUMN_UF_NAME);
+            String sql = String.format("INSERT INTO %s (%s, %s) VALUES (?, ?)", Municipio.TABLE_NAME, Municipio.COLLUMN_NAME_NAME, Municipio.COLLUMN_UF_NAME);
             ConnectionPool connectionPool = ConnectionPool.getInstance();
             Connection connection = connectionPool.getConnection();
             PreparedStatement stmt = connection.prepareStatement(sql);

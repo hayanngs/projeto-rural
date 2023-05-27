@@ -19,14 +19,12 @@ public class Main {
         Municipio municipio = municipioRepository.findById(1);
         System.out.println("Listando por id: " + municipio);
 
-        municipioRepository.persist(new Municipio(5, "teste", "GO"));
+        municipioRepository.persist(new Municipio("aaaaaaa", "GO"));
         municipios = municipioRepository.findAll();
         System.out.println(municipios);
 
         municipioRepository.update(new Municipio(5, "Mais mais", "GO"));
         municipios = municipioRepository.findAll();
         System.out.println(municipios);
-
-
     }
 }

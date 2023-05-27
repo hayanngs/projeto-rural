@@ -1,6 +1,6 @@
 package dev.hayann.model;
 
-public class Municipio {
+public class Municipio implements Entity {
 
     public static final String TABLE_NAME = "municipio";
 
@@ -18,6 +18,11 @@ public class Municipio {
 
     public Municipio(Integer id, String name, String uf) {
         this.id = id;
+        this.name = name;
+        this.uf = uf;
+    }
+
+    public Municipio(String name, String uf) {
         this.name = name;
         this.uf = uf;
     }

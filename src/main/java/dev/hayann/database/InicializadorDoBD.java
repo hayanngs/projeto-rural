@@ -11,34 +11,53 @@ import java.util.List;
 
 public class InicializadorDoBD {
 
+    private static final String PASTA_RESOURCES = "src/main/resources";
+
+    private static final String REGEX_SEQUENCES_SQL = "sequences.sql";
+
+    private static final String REGEX_NO_FK_SQL = "no_fk.sql";
+
+    private static final String REGEX_WITH_FK_SQL = "with_fk.sql";
+
     public static void inicializarBancoDeDados() {
         try {
             ConnectionPool connectionPool = ConnectionPool.getInstance();
             Connection connection = connectionPool.getConnection();
 
-            List<String> scriptList = obterListaDeScripts();
+            List<String> sequenceScriptList = obterListaDeScripts(REGEX_SEQUENCES_SQL);
+            List<String> noFkScriptList = obterListaDeScripts(REGEX_NO_FK_SQL);
+            List<String> withFkScriptList = obterListaDeScripts(REGEX_WITH_FK_SQL);
 
-            if (scriptList.isEmpty()) {
-                /* TODO: RENDERIZAR ERRO */
-            } else {
-                for (String script : scriptList) {
-                    connection.createStatement().executeUpdate(script);
-                }
-            }
-        } catch (SQLException e) {
+            executarListaDeScript(sequenceScriptList, connection);
+            executarListaDeScript(noFkScriptList, connection);
+            executarListaDeScript(withFkScriptList, connection);
+
+            connectionPool.releaseConnection(connection);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private static List<String> obterListaDeScripts() {
-        String pastaResources = "src/main/resources";
-        String padraoArquivoSQL = "regex:.*.sql";
+    private static void executarListaDeScript(List<String> scriptList, Connection connection) {
+        if (!scriptList.isEmpty()) {
+            for (String script : scriptList) {
+                try {
+                    connection.createStatement().executeUpdate(script);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private static List<String> obterListaDeScripts(String regex) {
+        String padraoArquivoSQL = "regex:" + regex;
         PathMatcher matcher = FileSystems.getDefault().getPathMatcher(padraoArquivoSQL);
 
         List<String> scriptList = new ArrayList<>();
 
         try {
-            Path diretorioResources = Paths.get(pastaResources);
+            Path diretorioResources = Paths.get(PASTA_RESOURCES);
 
             List<Path> arquivosSQL = Files.walk(diretorioResources).filter(matcher::matches).toList();
 

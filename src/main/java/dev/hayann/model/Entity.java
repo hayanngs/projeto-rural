@@ -1,2 +1,4 @@
-package dev.hayann.model;public interface Entity {
+package dev.hayann.model;
+
+public interface Entity {
 }
