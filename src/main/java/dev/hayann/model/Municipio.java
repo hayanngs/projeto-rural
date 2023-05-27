@@ -2,6 +2,14 @@ package dev.hayann.model;
 
 public class Municipio {
 
+    public static final String TABLE_NAME = "municipio";
+
+    public static final String COLLUMN_ID_NAME = "id_mun";
+
+    public static final String COLLUMN_NAME_NAME = "nam_mun";
+
+    public static final String COLLUMN_UF_NAME = "uf_mun";
+
     private Integer id;
 
     private String name;

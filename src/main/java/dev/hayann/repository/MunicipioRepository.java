@@ -1,5 +1,6 @@
 package dev.hayann.repository;
 
+import dev.hayann.database.ConnectionPool;
 import dev.hayann.model.Municipio;
 
 import java.sql.Connection;
@@ -8,17 +9,11 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MunicipioRepository {
-
-    private final String COLLUMN_ID_MUN = "id_mun";
-
-    private final String COLLUMN_NAM_MUN = "nam_mun";
-
-    private final String COLLUMN_UF_MUN = "uf_mun";
+public class MunicipioRepository implements Repository<Municipio> {
 
     public Municipio findById(int id) {
         try {
-            String sql = "SELECT id, nome, uf FROM municipios WHERE id = ?";
+            String sql = String.format("SELECT * FROM %s WHERE %s = ?", Municipio.TABLE_NAME, Municipio.COLLUMN_ID_NAME);
             ConnectionPool connectionPool = ConnectionPool.getInstance();
             Connection connection = connectionPool.getConnection();
             PreparedStatement stmt = connection.prepareStatement(sql);
@@ -27,9 +22,9 @@ public class MunicipioRepository {
             connectionPool.releaseConnection(connection);
             if (rs.next()) {
                 return new Municipio(
-                        rs.getInt(COLLUMN_ID_MUN),
-                        rs.getString(COLLUMN_NAM_MUN),
-                        rs.getString(COLLUMN_UF_MUN)
+                        rs.getInt(Municipio.COLLUMN_ID_NAME),
+                        rs.getString(Municipio.COLLUMN_NAME_NAME),
+                        rs.getString(Municipio.COLLUMN_UF_NAME)
                 );
             } else return null;
         } catch (Exception e) {
@@ -40,21 +35,22 @@ public class MunicipioRepository {
 
     public List<Municipio> findAll() {
         try {
-            String sql = "SELECT * FROM MUNICIPIO";
+            String sql = String.format("SELECT * FROM %s", Municipio.TABLE_NAME);
             ArrayList<Municipio> municipios = new ArrayList<>();
             ConnectionPool connectionPool = ConnectionPool.getInstance();
             Connection connection = connectionPool.getConnection();
             ResultSet resultSet = connection.createStatement().executeQuery(sql);
             while (resultSet.next()) {
                 municipios.add(new Municipio(
-                        resultSet.getInt(COLLUMN_ID_MUN),
-                        resultSet.getString(COLLUMN_NAM_MUN),
-                        resultSet.getString(COLLUMN_UF_MUN)
+                        resultSet.getInt(Municipio.COLLUMN_ID_NAME),
+                        resultSet.getString(Municipio.COLLUMN_NAME_NAME),
+                        resultSet.getString(Municipio.COLLUMN_UF_NAME)
                 ));
             }
             connectionPool.releaseConnection(connection);
             return municipios;
         } catch (Exception e) {
+            e.printStackTrace();
             /* TODO: Criar método de render de erro para renderizar um JDialog de erro na tela */
             return null;
         }
@@ -62,7 +58,7 @@ public class MunicipioRepository {
 
     public void persist(Municipio municipio) {
         try {
-            String sql = "INSERT INTO municipios (id, nome, uf) VALUES (?, ?, ?)";
+            String sql = String.format("INSERT INTO %s (%s, %s, %s) VALUES (?, ?, ?)", Municipio.TABLE_NAME, Municipio.COLLUMN_ID_NAME, Municipio.COLLUMN_NAME_NAME, Municipio.COLLUMN_UF_NAME);
             ConnectionPool connectionPool = ConnectionPool.getInstance();
             Connection connection = connectionPool.getConnection();
             PreparedStatement stmt = connection.prepareStatement(sql);
@@ -78,7 +74,7 @@ public class MunicipioRepository {
 
     public void update(Municipio municipio) {
         try {
-            String sql = "UPDATE municipios SET nome = ?, uf = ? WHERE id = ?";
+            String sql = String.format("UPDATE %s SET %s = ?, %s = ? WHERE %s = ?", Municipio.TABLE_NAME, Municipio.COLLUMN_NAME_NAME, Municipio.COLLUMN_UF_NAME, Municipio.COLLUMN_ID_NAME);
             ConnectionPool connectionPool = ConnectionPool.getInstance();
             Connection connection = connectionPool.getConnection();
             PreparedStatement stmt = connection.prepareStatement(sql);

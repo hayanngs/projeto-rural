@@ -1,4 +1,4 @@
-package dev.hayann.repository;
+package dev.hayann.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
