@@ -1,7 +1,7 @@
 package dev.hayann.repository;
 
 import dev.hayann.database.ConnectionPool;
-import dev.hayann.model.Municipio;
+import dev.hayann.model.Produto;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,11 +9,11 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProdutoRepository implements Repository<Municipio> {
+public class ProdutoRepository implements Repository<Produto> {
 
-    public Municipio findById(int id) {
+    public Produto findById(int id) {
         try {
-            String sql = String.format("SELECT * FROM %s WHERE %s = ?", Municipio.TABLE_NAME, Municipio.COLLUMN_ID_NAME);
+            String sql = String.format("SELECT * FROM %s WHERE %s = ?", Produto.TABLE_NAME, Produto.COLLUMN_ID_NAME);
             ConnectionPool connectionPool = ConnectionPool.getInstance();
             Connection connection = connectionPool.getConnection();
             PreparedStatement stmt = connection.prepareStatement(sql);
@@ -21,10 +21,9 @@ public class ProdutoRepository implements Repository<Municipio> {
             ResultSet rs = stmt.executeQuery();
             connectionPool.releaseConnection(connection);
             if (rs.next()) {
-                return new Municipio(
-                        rs.getInt(Municipio.COLLUMN_ID_NAME),
-                        rs.getString(Municipio.COLLUMN_NAME_NAME),
-                        rs.getString(Municipio.COLLUMN_UF_NAME)
+                return new Produto(
+                        rs.getInt(Produto.COLLUMN_ID_NAME),
+                        rs.getString(Produto.COLLUMN_DESCRIPTION_NAME)
                 );
             } else return null;
         } catch (Exception e) {
@@ -33,18 +32,17 @@ public class ProdutoRepository implements Repository<Municipio> {
         }
     }
 
-    public List<Municipio> findAll() {
+    public List<Produto> findAll() {
         try {
-            String sql = String.format("SELECT * FROM %s", Municipio.TABLE_NAME);
-            ArrayList<Municipio> municipios = new ArrayList<>();
+            String sql = String.format("SELECT * FROM %s", Produto.TABLE_NAME);
+            ArrayList<Produto> municipios = new ArrayList<>();
             ConnectionPool connectionPool = ConnectionPool.getInstance();
             Connection connection = connectionPool.getConnection();
             ResultSet resultSet = connection.createStatement().executeQuery(sql);
             while (resultSet.next()) {
-                municipios.add(new Municipio(
-                        resultSet.getInt(Municipio.COLLUMN_ID_NAME),
-                        resultSet.getString(Municipio.COLLUMN_NAME_NAME),
-                        resultSet.getString(Municipio.COLLUMN_UF_NAME)
+                municipios.add(new Produto(
+                        resultSet.getInt(Produto.COLLUMN_ID_NAME),
+                        resultSet.getString(Produto.COLLUMN_DESCRIPTION_NAME)
                 ));
             }
             connectionPool.releaseConnection(connection);
@@ -56,15 +54,13 @@ public class ProdutoRepository implements Repository<Municipio> {
         }
     }
 
-    public void persist(Municipio municipio) {
+    public void persist(Produto produto) {
         try {
-            String sql = String.format("INSERT INTO %s (%s, %s) VALUES (?, ?)", Municipio.TABLE_NAME, Municipio.COLLUMN_NAME_NAME, Municipio.COLLUMN_UF_NAME);
+            String sql = String.format("INSERT INTO %s (%s) VALUES (?)", Produto.TABLE_NAME, Produto.COLLUMN_DESCRIPTION_NAME);
             ConnectionPool connectionPool = ConnectionPool.getInstance();
             Connection connection = connectionPool.getConnection();
             PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, municipio.getId());
-            stmt.setString(2, municipio.getName());
-            stmt.setString(3, municipio.getUf());
+            stmt.setString(1, produto.getDescricao());
             stmt.executeUpdate();
             connectionPool.releaseConnection(connection);
         } catch (Exception e) {
@@ -72,15 +68,14 @@ public class ProdutoRepository implements Repository<Municipio> {
         }
     }
 
-    public void update(Municipio municipio) {
+    public void update(Produto municipio) {
         try {
-            String sql = String.format("UPDATE %s SET %s = ?, %s = ? WHERE %s = ?", Municipio.TABLE_NAME, Municipio.COLLUMN_NAME_NAME, Municipio.COLLUMN_UF_NAME, Municipio.COLLUMN_ID_NAME);
+            String sql = String.format("UPDATE %s SET %s = ? WHERE %s = ?", Produto.TABLE_NAME, Produto.COLLUMN_DESCRIPTION_NAME, Produto.COLLUMN_ID_NAME);
             ConnectionPool connectionPool = ConnectionPool.getInstance();
             Connection connection = connectionPool.getConnection();
             PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setString(1, municipio.getName());
-            stmt.setString(2, municipio.getUf());
-            stmt.setInt(3, municipio.getId());
+            stmt.setString(1, municipio.getDescricao());
+            stmt.setInt(2, municipio.getId());
             stmt.executeUpdate();
             connectionPool.releaseConnection(connection);
         } catch (Exception e) {
