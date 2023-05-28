@@ -4,19 +4,38 @@ import dev.hayann.database.InicializadorDoBD;
 import dev.hayann.model.Municipio;
 import dev.hayann.model.Produto;
 import dev.hayann.model.Propriedade;
+import dev.hayann.model.Proprietario;
 import dev.hayann.repository.MunicipioRepository;
 import dev.hayann.repository.ProdutoRepository;
 import dev.hayann.repository.PropriedadeRepository;
+import dev.hayann.repository.ProprietarioRepository;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public class Main {
 
-	public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException {
         InicializadorDoBD.inicializarBancoDeDados();
 
-		testePropriedade();
+        testeProprietario();
+    }
+
+    public static void testeProprietario() {
+        ProprietarioRepository proprietarioRepository = new ProprietarioRepository();
+        List<Proprietario> produtos = proprietarioRepository.findAll();
+        System.out.println("Listando tudo: " + produtos);
+
+        Proprietario propriedade = proprietarioRepository.findById(1);
+        System.out.println("Listando por id: " + propriedade);
+
+        proprietarioRepository.persist(new Proprietario("Proprietario a Fazenda do fazendeiro", 10000, 10000, 10000));
+        produtos = proprietarioRepository.findAll();
+        System.out.println("Listando nova persistencia: " + produtos);
+
+        proprietarioRepository.update(new Proprietario(1, "Feijoada", 20000, 20000, 20000));
+        produtos = proprietarioRepository.findAll();
+        System.out.println("Listando novo update: " + produtos);
     }
 
     public static void testePropriedade() {

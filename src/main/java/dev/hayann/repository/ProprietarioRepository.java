@@ -1,8 +1,7 @@
 package dev.hayann.repository;
 
 import dev.hayann.database.ConnectionPool;
-import dev.hayann.model.Propriedade;
-import dev.hayann.model.Propriedade;
+import dev.hayann.model.Proprietario;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,11 +9,11 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PropriedadeRepository implements Repository<Propriedade> {
+public class ProprietarioRepository implements Repository<Proprietario> {
 
-    public Propriedade findById(int id) {
+    public Proprietario findById(int id) {
         try {
-            String sql = String.format("SELECT * FROM %s WHERE %s = ?", Propriedade.TABLE_NAME, Propriedade.COLLUMN_ID_NAME);
+            String sql = String.format("SELECT * FROM %s WHERE %s = ?", Proprietario.TABLE_NAME, Proprietario.COLLUMN_ID_NAME);
             ConnectionPool connectionPool = ConnectionPool.getInstance();
             Connection connection = connectionPool.getConnection();
             PreparedStatement stmt = connection.prepareStatement(sql);
@@ -22,12 +21,12 @@ public class PropriedadeRepository implements Repository<Propriedade> {
             ResultSet resultSet = stmt.executeQuery();
             connectionPool.releaseConnection(connection);
             if (resultSet.next()) {
-                return new Propriedade(
-                        resultSet.getInt(Propriedade.COLLUMN_ID_NAME),
-                        resultSet.getString(Propriedade.COLLUMN_NAME_NAME),
-                        resultSet.getDouble(Propriedade.COLLUMN_AREA_PROPRIEDADE_NAME),
-                        resultSet.getDouble(Propriedade.COLLUMN_DISTANCIA_MUNICIPIO_NAME),
-                        resultSet.getDouble(Propriedade.COLLUMN_VALOR_AQUISICAO_NAME)
+                return new Proprietario(
+                        resultSet.getInt(Proprietario.COLLUMN_ID_NAME),
+                        resultSet.getString(Proprietario.COLLUMN_NAME_NAME),
+                        resultSet.getInt(Proprietario.COLLUMN_TELEFONE1_NAME),
+                        resultSet.getInt(Proprietario.COLLUMN_TELEFONE2_NAME),
+                        resultSet.getInt(Proprietario.COLLUMN_TELEFONE3_NAME)
                 );
             } else return null;
         } catch (Exception e) {
@@ -36,20 +35,20 @@ public class PropriedadeRepository implements Repository<Propriedade> {
         }
     }
 
-    public List<Propriedade> findAll() {
+    public List<Proprietario> findAll() {
         try {
-            String sql = String.format("SELECT * FROM %s", Propriedade.TABLE_NAME);
-            ArrayList<Propriedade> municipios = new ArrayList<>();
+            String sql = String.format("SELECT * FROM %s", Proprietario.TABLE_NAME);
+            ArrayList<Proprietario> municipios = new ArrayList<>();
             ConnectionPool connectionPool = ConnectionPool.getInstance();
             Connection connection = connectionPool.getConnection();
             ResultSet resultSet = connection.createStatement().executeQuery(sql);
             while (resultSet.next()) {
-                municipios.add(new Propriedade(
-                        resultSet.getInt(Propriedade.COLLUMN_ID_NAME),
-                        resultSet.getString(Propriedade.COLLUMN_NAME_NAME),
-                        resultSet.getDouble(Propriedade.COLLUMN_AREA_PROPRIEDADE_NAME),
-                        resultSet.getDouble(Propriedade.COLLUMN_DISTANCIA_MUNICIPIO_NAME),
-                        resultSet.getDouble(Propriedade.COLLUMN_VALOR_AQUISICAO_NAME)
+                municipios.add(new Proprietario(
+                        resultSet.getInt(Proprietario.COLLUMN_ID_NAME),
+                        resultSet.getString(Proprietario.COLLUMN_NAME_NAME),
+                        resultSet.getInt(Proprietario.COLLUMN_TELEFONE1_NAME),
+                        resultSet.getInt(Proprietario.COLLUMN_TELEFONE2_NAME),
+                        resultSet.getInt(Proprietario.COLLUMN_TELEFONE3_NAME)
                 ));
             }
             connectionPool.releaseConnection(connection);
@@ -61,23 +60,23 @@ public class PropriedadeRepository implements Repository<Propriedade> {
         }
     }
 
-    public void persist(Propriedade propriedade) {
+    public void persist(Proprietario proprietario) {
         try {
             String sql = String.format(
                     "INSERT INTO %s (%s, %s, %s, %s) VALUES (?, ?, ?, ?)",
-                    Propriedade.TABLE_NAME,
-                    Propriedade.COLLUMN_NAME_NAME,
-                    Propriedade.COLLUMN_AREA_PROPRIEDADE_NAME,
-                    Propriedade.COLLUMN_DISTANCIA_MUNICIPIO_NAME,
-                    Propriedade.COLLUMN_VALOR_AQUISICAO_NAME
+                    Proprietario.TABLE_NAME,
+                    Proprietario.COLLUMN_NAME_NAME,
+                    Proprietario.COLLUMN_TELEFONE1_NAME,
+                    Proprietario.COLLUMN_TELEFONE2_NAME,
+                    Proprietario.COLLUMN_TELEFONE3_NAME
             );
             ConnectionPool connectionPool = ConnectionPool.getInstance();
             Connection connection = connectionPool.getConnection();
             PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setString(1, propriedade.getName());
-            stmt.setDouble(2, propriedade.getAreaPropriedade());
-            stmt.setDouble(3, propriedade.getDistanciaMunicipio());
-            stmt.setDouble(4, propriedade.getValorAquisicao());
+            stmt.setString(1, proprietario.getName());
+            stmt.setDouble(2, proprietario.getTelefone1());
+            stmt.setDouble(3, proprietario.getTelefone2());
+            stmt.setDouble(4, proprietario.getTelefone3());
             stmt.executeUpdate();
             connectionPool.releaseConnection(connection);
         } catch (Exception e) {
@@ -85,25 +84,25 @@ public class PropriedadeRepository implements Repository<Propriedade> {
         }
     }
 
-    public void update(Propriedade propriedade) {
+    public void update(Proprietario proprietario) {
         try {
             String sql = String.format(
                     "UPDATE %s SET %s = ?, %s = ?, %s = ?, %s = ? WHERE %s = ?",
-                    Propriedade.TABLE_NAME,
-                    Propriedade.COLLUMN_NAME_NAME,
-                    Propriedade.COLLUMN_AREA_PROPRIEDADE_NAME,
-                    Propriedade.COLLUMN_DISTANCIA_MUNICIPIO_NAME,
-                    Propriedade.COLLUMN_VALOR_AQUISICAO_NAME,
-                    Propriedade.COLLUMN_ID_NAME
+                    Proprietario.TABLE_NAME,
+                    Proprietario.COLLUMN_NAME_NAME,
+                    Proprietario.COLLUMN_TELEFONE1_NAME,
+                    Proprietario.COLLUMN_TELEFONE2_NAME,
+                    Proprietario.COLLUMN_TELEFONE3_NAME,
+                    Proprietario.COLLUMN_ID_NAME
             );
             ConnectionPool connectionPool = ConnectionPool.getInstance();
             Connection connection = connectionPool.getConnection();
             PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setString(1, propriedade.getName());
-            stmt.setDouble(2, propriedade.getAreaPropriedade());
-            stmt.setDouble(3, propriedade.getDistanciaMunicipio());
-            stmt.setDouble(4, propriedade.getValorAquisicao());
-            stmt.setInt(5, propriedade.getId());
+            stmt.setString(1, proprietario.getName());
+            stmt.setDouble(2, proprietario.getTelefone1());
+            stmt.setDouble(3, proprietario.getTelefone2());
+            stmt.setDouble(4, proprietario.getTelefone3());
+            stmt.setInt(5, proprietario.getId());
             stmt.executeUpdate();
             connectionPool.releaseConnection(connection);
         } catch (Exception e) {
