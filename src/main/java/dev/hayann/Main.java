@@ -3,8 +3,10 @@ package dev.hayann;
 import dev.hayann.database.InicializadorDoBD;
 import dev.hayann.model.Municipio;
 import dev.hayann.model.Produto;
+import dev.hayann.model.Propriedade;
 import dev.hayann.repository.MunicipioRepository;
 import dev.hayann.repository.ProdutoRepository;
+import dev.hayann.repository.PropriedadeRepository;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -14,7 +16,24 @@ public class Main {
 	public static void main(String[] args) throws SQLException {
         InicializadorDoBD.inicializarBancoDeDados();
 
-		testeProduto();
+		testePropriedade();
+    }
+
+    public static void testePropriedade() {
+        PropriedadeRepository propriedadeRepository = new PropriedadeRepository();
+        List<Propriedade> produtos = propriedadeRepository.findAll();
+        System.out.println(produtos);
+
+        Propriedade propriedade = propriedadeRepository.findById(1);
+        System.out.println("Listando por id: " + propriedade);
+
+        propriedadeRepository.persist(new Propriedade("Fazenda do fazendeiro", 100.00, 300.00, 542.31));
+        produtos = propriedadeRepository.findAll();
+        System.out.println(produtos);
+
+        propriedadeRepository.update(new Propriedade(1, "Feijoada", 0.00, 0.00, 0.00));
+        produtos = propriedadeRepository.findAll();
+        System.out.println(produtos);
     }
 
     public static void testeProduto() {

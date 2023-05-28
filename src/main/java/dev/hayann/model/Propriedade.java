@@ -84,9 +84,6 @@ public class Propriedade implements Entity {
         return "Propriedade{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", areaPropriedade=" + areaPropriedade +
-                ", distanciaMunicipio=" + distanciaMunicipio +
-                ", valorAquisicao=" + valorAquisicao +
                 '}';
     }
 }
