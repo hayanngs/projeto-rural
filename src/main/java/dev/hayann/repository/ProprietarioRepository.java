@@ -38,12 +38,12 @@ public class ProprietarioRepository implements Repository<Proprietario> {
     public List<Proprietario> findAll() {
         try {
             String sql = String.format("SELECT * FROM %s", Proprietario.TABLE_NAME);
-            ArrayList<Proprietario> municipios = new ArrayList<>();
+            ArrayList<Proprietario> proprietarios = new ArrayList<>();
             ConnectionPool connectionPool = ConnectionPool.getInstance();
             Connection connection = connectionPool.getConnection();
             ResultSet resultSet = connection.createStatement().executeQuery(sql);
             while (resultSet.next()) {
-                municipios.add(new Proprietario(
+                proprietarios.add(new Proprietario(
                         resultSet.getInt(Proprietario.COLLUMN_ID_NAME),
                         resultSet.getString(Proprietario.COLLUMN_NAME_NAME),
                         resultSet.getInt(Proprietario.COLLUMN_TELEFONE1_NAME),
@@ -52,7 +52,7 @@ public class ProprietarioRepository implements Repository<Proprietario> {
                 ));
             }
             connectionPool.releaseConnection(connection);
-            return municipios;
+            return proprietarios;
         } catch (Exception e) {
             e.printStackTrace();
             /* TODO: Criar método de render de erro para renderizar um JDialog de erro na tela */

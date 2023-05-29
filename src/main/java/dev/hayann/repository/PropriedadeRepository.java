@@ -39,12 +39,12 @@ public class PropriedadeRepository implements Repository<Propriedade> {
     public List<Propriedade> findAll() {
         try {
             String sql = String.format("SELECT * FROM %s", Propriedade.TABLE_NAME);
-            ArrayList<Propriedade> municipios = new ArrayList<>();
+            ArrayList<Propriedade> propriedades = new ArrayList<>();
             ConnectionPool connectionPool = ConnectionPool.getInstance();
             Connection connection = connectionPool.getConnection();
             ResultSet resultSet = connection.createStatement().executeQuery(sql);
             while (resultSet.next()) {
-                municipios.add(new Propriedade(
+                propriedades.add(new Propriedade(
                         resultSet.getInt(Propriedade.COLLUMN_ID_NAME),
                         resultSet.getString(Propriedade.COLLUMN_NAME_NAME),
                         resultSet.getDouble(Propriedade.COLLUMN_AREA_PROPRIEDADE_NAME),
@@ -53,7 +53,7 @@ public class PropriedadeRepository implements Repository<Propriedade> {
                 ));
             }
             connectionPool.releaseConnection(connection);
-            return municipios;
+            return propriedades;
         } catch (Exception e) {
             e.printStackTrace();
             /* TODO: Criar método de render de erro para renderizar um JDialog de erro na tela */
