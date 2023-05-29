@@ -1,24 +1,40 @@
 package dev.hayann;
 
 import dev.hayann.database.InicializadorDoBD;
-import dev.hayann.model.Municipio;
-import dev.hayann.model.Produto;
-import dev.hayann.model.Propriedade;
-import dev.hayann.model.Proprietario;
-import dev.hayann.repository.MunicipioRepository;
-import dev.hayann.repository.ProdutoRepository;
-import dev.hayann.repository.PropriedadeRepository;
-import dev.hayann.repository.ProprietarioRepository;
+import dev.hayann.model.*;
+import dev.hayann.repository.*;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.temporal.TemporalUnit;
 import java.util.List;
 
 public class Main {
 
     public static void main(String[] args) throws SQLException {
         InicializadorDoBD.inicializarBancoDeDados();
+        //testePropriedade();
+        //testeProprietario();
+        //testeProduto();
+        //testeMunicipio();
+        testeProducao();
+    }
 
-        testeProprietario();
+    public static void testeProducao() {
+        ProducaoRepository producaoRepository = new ProducaoRepository();
+        List<Producao> producoes = producaoRepository.findAll();
+        System.out.println("Listando tudo: " + producoes);
+
+        Producao producao = producaoRepository.findById(1, 2);
+        System.out.println("Listando por id: " + producao);
+
+        producaoRepository.persist(new Producao(1, 3, LocalDate.now(), LocalDate.now(), 10000.00, LocalDate.now(), LocalDate.now(), 1000.00));
+        producoes = producaoRepository.findAll();
+        System.out.println("Listando nova persistencia: " + producoes);
+
+        producaoRepository.update(new Producao(1, 1, LocalDate.now().minusDays(1), LocalDate.now(), 10000.00, LocalDate.now(), LocalDate.now(), 1000.00));
+        producoes = producaoRepository.findAll();
+        System.out.println("Listando novo update: " + producoes);
     }
 
     public static void testeProprietario() {
@@ -72,7 +88,7 @@ public class Main {
         System.out.println(produtos);
     }
 
-    public void testeMunicipio() {
+    public static void testeMunicipio() {
         MunicipioRepository municipioRepository = new MunicipioRepository();
         List<Municipio> municipios = municipioRepository.findAll();
         System.out.println(municipios);

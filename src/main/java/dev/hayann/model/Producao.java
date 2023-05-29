@@ -38,9 +38,7 @@ public class Producao implements Entity {
 
     private Double qtdRealColhida;
 
-    private String descricao;
-
-    public Producao(Integer idPropriedade, Integer idProduto, LocalDate dataInicioColheitaProv, LocalDate dataFimColheitaProv, Double qtdProvColhida, LocalDate dataInicioColheitaReal, LocalDate dataFimColheitaReal, Double qtdRealColhida, String descricao) {
+    public Producao(Integer idPropriedade, Integer idProduto, LocalDate dataInicioColheitaProv, LocalDate dataFimColheitaProv, Double qtdProvColhida, LocalDate dataInicioColheitaReal, LocalDate dataFimColheitaReal, Double qtdRealColhida) {
         this.idPropriedade = idPropriedade;
         this.idProduto = idProduto;
         this.dataInicioColheitaProv = dataInicioColheitaProv;
@@ -49,7 +47,6 @@ public class Producao implements Entity {
         this.dataInicioColheitaReal = dataInicioColheitaReal;
         this.dataFimColheitaReal = dataFimColheitaReal;
         this.qtdRealColhida = qtdRealColhida;
-        this.descricao = descricao;
     }
 
     public Integer getIdPropriedade() {
@@ -116,11 +113,11 @@ public class Producao implements Entity {
         this.qtdRealColhida = qtdRealColhida;
     }
 
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
+    @Override
+    public String toString() {
+        return "Producao{" +
+                "idPropriedade=" + idPropriedade +
+                ", idProduto=" + idProduto +
+                '}';
     }
 }
