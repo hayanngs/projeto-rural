@@ -1,6 +1,7 @@
 package dev.hayann;
 
 import dev.hayann.view.municipio.MunicipioWindow;
+import dev.hayann.view.produto.ProdutoWindow;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,6 +10,8 @@ public class MainApp extends JFrame {
     private JTabbedPane tabbedPane;
 
     public static MunicipioWindow municipioWindow = new MunicipioWindow();
+
+    public static ProdutoWindow produtoWindow = new ProdutoWindow();
 
     public MainApp() {
         // Configurações da janela
@@ -20,8 +23,8 @@ public class MainApp extends JFrame {
         // Criar o JTabbedPane
         tabbedPane = new JTabbedPane();
 
-        // Adicionar a tela do Município
         tabbedPane.addTab("Município", municipioWindow.getPanel());
+        tabbedPane.addTab("Produto", produtoWindow.getPanel());
 
         add(tabbedPane, BorderLayout.CENTER);
 

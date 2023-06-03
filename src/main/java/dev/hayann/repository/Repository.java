@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface Repository<T> {
 
-    public List<T> findAll();
+    public List<T> findAll() throws SQLException;
 
     public void persist(T t) throws SQLException;
 

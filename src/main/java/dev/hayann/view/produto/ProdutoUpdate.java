@@ -1,18 +1,18 @@
-package dev.hayann.view.municipio;
+package dev.hayann.view.produto;
 
-import dev.hayann.model.Municipio;
+import dev.hayann.model.Produto;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class MunicipioUpdate extends JDialog {
+public class ProdutoUpdate extends JDialog{
+
     private JTextField txtId;
-    private JTextField txtNome;
-    private JTextField txtUf;
+    private JTextField txtDescription;
 
     boolean salvo = false;
 
-    public MunicipioUpdate(Frame parent, Municipio municipio) {
+    public ProdutoUpdate(Frame parent, Produto produto) {
         super(parent, "Atualizar Cadastro", true);
         setLayout(new BorderLayout());
         setSize(300, 200);
@@ -23,32 +23,25 @@ public class MunicipioUpdate extends JDialog {
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JLabel lblId = new JLabel("ID:");
-        txtId = new JTextField(municipio.getId().toString());
+        txtId = new JTextField(produto.getId().toString());
         txtId.setEditable(false);
         txtId.setBackground(Color.LIGHT_GRAY);
         txtId.setBorder(BorderFactory.createEtchedBorder());
 
-        JLabel lblNome = new JLabel("Nome:");
-        txtNome = new JTextField(municipio.getName());
-        txtNome.setBackground(Color.WHITE);
-        txtNome.setBorder(BorderFactory.createEtchedBorder());
+        JLabel lblDescription = new JLabel("Descrição:");
+        txtDescription = new JTextField(produto.getDescricao());
+        txtDescription.setBackground(Color.WHITE);
+        txtDescription.setBorder(BorderFactory.createEtchedBorder());
 
-        JLabel lblUf = new JLabel("UF:");
-        txtUf = new JTextField(municipio.getUf());
-        txtUf.setBackground(Color.WHITE);
-        txtUf.setBorder(BorderFactory.createEtchedBorder());
 
         panel.add(lblId);
         panel.add(txtId);
-        panel.add(lblNome);
-        panel.add(txtNome);
-        panel.add(lblUf);
-        panel.add(txtUf);
+        panel.add(lblDescription);
+        panel.add(txtDescription);
 
         JButton btnSalvar = new JButton("Salvar");
         btnSalvar.addActionListener(e -> {
-            municipio.setName(txtNome.getText());
-            municipio.setUf(txtUf.getText());
+            produto.setDescricao(txtDescription.getText());
             salvo = true;
             dispose();
         });

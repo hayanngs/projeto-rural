@@ -34,27 +34,21 @@ public class MunicipioRepository implements Repository<Municipio> {
         }
     }
 
-    public List<Municipio> findAll() {
-        try {
-            String sql = String.format("SELECT * FROM %s ORDER BY %s", Municipio.TABLE_NAME, Municipio.COLLUMN_ID_NAME);
-            ArrayList<Municipio> municipios = new ArrayList<>();
-            ConnectionPool connectionPool = ConnectionPool.getInstance();
-            Connection connection = connectionPool.getConnection();
-            ResultSet resultSet = connection.createStatement().executeQuery(sql);
-            while (resultSet.next()) {
-                municipios.add(new Municipio(
-                        resultSet.getInt(Municipio.COLLUMN_ID_NAME),
-                        resultSet.getString(Municipio.COLLUMN_NAME_NAME),
-                        resultSet.getString(Municipio.COLLUMN_UF_NAME)
-                ));
-            }
-            connectionPool.releaseConnection(connection);
-            return municipios;
-        } catch (Exception e) {
-            e.printStackTrace();
-            /* TODO: Criar método de render de erro para renderizar um JDialog de erro na tela */
-            return null;
+    public List<Municipio> findAll() throws SQLException {
+        String sql = String.format("SELECT * FROM %s ORDER BY %s", Municipio.TABLE_NAME, Municipio.COLLUMN_ID_NAME);
+        ArrayList<Municipio> municipios = new ArrayList<>();
+        ConnectionPool connectionPool = ConnectionPool.getInstance();
+        Connection connection = connectionPool.getConnection();
+        ResultSet resultSet = connection.createStatement().executeQuery(sql);
+        while (resultSet.next()) {
+            municipios.add(new Municipio(
+                    resultSet.getInt(Municipio.COLLUMN_ID_NAME),
+                    resultSet.getString(Municipio.COLLUMN_NAME_NAME),
+                    resultSet.getString(Municipio.COLLUMN_UF_NAME)
+            ));
         }
+        connectionPool.releaseConnection(connection);
+        return municipios;
     }
 
     public void persist(Municipio municipio) throws SQLException {
