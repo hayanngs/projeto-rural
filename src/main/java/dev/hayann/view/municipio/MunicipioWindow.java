@@ -91,7 +91,7 @@ public class MunicipioWindow {
             int selectedRow = table.getSelectedRow();
             if (selectedRow != -1) {
                 try {
-                    WarningDialog warningDialog = new WarningDialog((JFrame) SwingUtilities.getWindowAncestor(panel), MunicipioMessages.WARNING_DELETE);
+                    WarningDialog warningDialog = new WarningDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.WARNING_DELETE);
                     if (warningDialog.isConfirmed()) {
                         Integer id = Integer.parseInt(tableModel.getValueAt(selectedRow, 0).toString());
                         municipioRepository.delete(id);
