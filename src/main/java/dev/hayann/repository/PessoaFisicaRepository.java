@@ -1,7 +1,7 @@
 package dev.hayann.repository;
 
 import dev.hayann.database.ConnectionPool;
-import dev.hayann.model.Producao;
+import dev.hayann.model.PessoaFisica;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -10,28 +10,25 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PessoaFisicaRepository implements Repository<Producao> {
+public class PessoaFisicaRepository implements Repository<PessoaFisica> {
 
-    public Producao findById(int idPropriedade, int idProduto) {
+    public PessoaFisica findById(int idPropriedade) {
         try {
-            String sql = String.format("SELECT * FROM %s WHERE %s = ? AND %s = ?", Producao.TABLE_NAME, Producao.COLLUMN_ID_PROPRIEDADE_NAME, Producao.COLLUMN_ID_PRODUTO_NAME);
+            String sql = String.format("SELECT * FROM %s WHERE %s = ?", PessoaFisica.TABLE_NAME, PessoaFisica.COLLUMN_ID_PROPRIETARIO_PF_NAME);
             ConnectionPool connectionPool = ConnectionPool.getInstance();
             Connection connection = connectionPool.getConnection();
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setInt(1, idPropriedade);
-            stmt.setInt(2, idProduto);
             ResultSet resultSet = stmt.executeQuery();
             connectionPool.releaseConnection(connection);
             if (resultSet.next()) {
-                return new Producao(
-                        resultSet.getInt(Producao.COLLUMN_ID_PROPRIEDADE_NAME),
-                        resultSet.getInt(Producao.COLLUMN_ID_PRODUTO_NAME),
-                        resultSet.getDate(Producao.COLLUMN_DATA_INICIO_PROV_COLHEITA_NAME).toLocalDate(),
-                        resultSet.getDate(Producao.COLLUMN_DATA_FIM_PROV_COLHEITA_NAME).toLocalDate(),
-                        resultSet.getDouble(Producao.COLLUMN_QTD_PROV_COLHIDA_NAME),
-                        resultSet.getDate(Producao.COLLUMN_DATA_INICIO_REAL_COLHEITA_NAME).toLocalDate(),
-                        resultSet.getDate(Producao.COLLUMN_DATA_FIM_REAL_COLHEITA_NAME).toLocalDate(),
-                        resultSet.getDouble(Producao.COLLUMN_QTD_REAL_COLHIDA_NAME)
+                return new PessoaFisica(
+                        resultSet.getInt(PessoaFisica.COLLUMN_ID_PROPRIETARIO_PF_NAME),
+                        resultSet.getInt(PessoaFisica.COLLUMN_CPF_NAME),
+                        resultSet.getInt(PessoaFisica.COLLUMN_RG_NAME),
+                        resultSet.getString(PessoaFisica.COLLUMN_NAME_NAME),
+                        resultSet.getInt(PessoaFisica.COLLUMN_ID_CONJUGE_NAME),
+                        resultSet.getDate(PessoaFisica.COLLUMN_DATA_NASCIMENTO_NAME).toLocalDate()
                 );
             } else return null;
         } catch (Exception e) {
@@ -40,23 +37,21 @@ public class PessoaFisicaRepository implements Repository<Producao> {
         }
     }
 
-    public List<Producao> findAll() {
+    public List<PessoaFisica> findAll() {
         try {
-            String sql = String.format("SELECT * FROM %s", Producao.TABLE_NAME);
-            ArrayList<Producao> producoes = new ArrayList<>();
+            String sql = String.format("SELECT * FROM %s", PessoaFisica.TABLE_NAME);
+            ArrayList<PessoaFisica> producoes = new ArrayList<>();
             ConnectionPool connectionPool = ConnectionPool.getInstance();
             Connection connection = connectionPool.getConnection();
             ResultSet resultSet = connection.createStatement().executeQuery(sql);
             while (resultSet.next()) {
-                producoes.add(new Producao(
-                        resultSet.getInt(Producao.COLLUMN_ID_PROPRIEDADE_NAME),
-                        resultSet.getInt(Producao.COLLUMN_ID_PRODUTO_NAME),
-                        resultSet.getDate(Producao.COLLUMN_DATA_INICIO_PROV_COLHEITA_NAME).toLocalDate(),
-                        resultSet.getDate(Producao.COLLUMN_DATA_FIM_PROV_COLHEITA_NAME).toLocalDate(),
-                        resultSet.getDouble(Producao.COLLUMN_QTD_PROV_COLHIDA_NAME),
-                        resultSet.getDate(Producao.COLLUMN_DATA_INICIO_REAL_COLHEITA_NAME).toLocalDate(),
-                        resultSet.getDate(Producao.COLLUMN_DATA_FIM_REAL_COLHEITA_NAME).toLocalDate(),
-                        resultSet.getDouble(Producao.COLLUMN_QTD_REAL_COLHIDA_NAME)
+                producoes.add(new PessoaFisica(
+                        resultSet.getInt(PessoaFisica.COLLUMN_ID_PROPRIETARIO_PF_NAME),
+                        resultSet.getInt(PessoaFisica.COLLUMN_CPF_NAME),
+                        resultSet.getInt(PessoaFisica.COLLUMN_RG_NAME),
+                        resultSet.getString(PessoaFisica.COLLUMN_NAME_NAME),
+                        resultSet.getInt(PessoaFisica.COLLUMN_ID_CONJUGE_NAME),
+                        resultSet.getDate(PessoaFisica.COLLUMN_DATA_NASCIMENTO_NAME).toLocalDate()
                 ));
             }
             connectionPool.releaseConnection(connection);
@@ -68,29 +63,25 @@ public class PessoaFisicaRepository implements Repository<Producao> {
         }
     }
 
-    public void persist(Producao producao) {
+    public void persist(PessoaFisica pessoaFisica) {
         try {
-            String sql = String.format("INSERT INTO %s (%s, %s, %s, %s, %s, %s, %s, %s) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", Producao.TABLE_NAME,
-                    Producao.COLLUMN_ID_PROPRIEDADE_NAME,
-                    Producao.COLLUMN_ID_PRODUTO_NAME,
-                    Producao.COLLUMN_DATA_INICIO_PROV_COLHEITA_NAME,
-                    Producao.COLLUMN_DATA_FIM_PROV_COLHEITA_NAME,
-                    Producao.COLLUMN_QTD_PROV_COLHIDA_NAME,
-                    Producao.COLLUMN_DATA_INICIO_REAL_COLHEITA_NAME,
-                    Producao.COLLUMN_DATA_FIM_REAL_COLHEITA_NAME,
-                    Producao.COLLUMN_QTD_REAL_COLHIDA_NAME
+            String sql = String.format("INSERT INTO %s (%s, %s, %s, %s, %s, %s) VALUES (?, ?, ?, ?, ?, ?)", PessoaFisica.TABLE_NAME,
+                    PessoaFisica.COLLUMN_ID_PROPRIETARIO_PF_NAME,
+                    PessoaFisica.COLLUMN_CPF_NAME,
+                    PessoaFisica.COLLUMN_RG_NAME,
+                    PessoaFisica.COLLUMN_NAME_NAME,
+                    PessoaFisica.COLLUMN_ID_CONJUGE_NAME,
+                    PessoaFisica.COLLUMN_DATA_NASCIMENTO_NAME
             );
             ConnectionPool connectionPool = ConnectionPool.getInstance();
             Connection connection = connectionPool.getConnection();
             PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, producao.getIdPropriedade());
-            stmt.setInt(2, producao.getIdProduto());
-            stmt.setDate(3, Date.valueOf(producao.getDataInicioColheitaProv()));
-            stmt.setDate(4, Date.valueOf(producao.getDataFimColheitaProv()));
-            stmt.setDouble(5, producao.getQtdProvColhida());
-            stmt.setDate(6, Date.valueOf(producao.getDataInicioColheitaReal()));
-            stmt.setDate(7, Date.valueOf(producao.getDataFimColheitaReal()));
-            stmt.setDouble(8, producao.getQtdRealColhida());
+            stmt.setInt(1, pessoaFisica.getIdProprietarioPessoaFisica());
+            stmt.setInt(2, pessoaFisica.getCpf());
+            stmt.setInt(3, pessoaFisica.getRg());
+            stmt.setString(4, pessoaFisica.getName());
+            stmt.setInt(5, pessoaFisica.getIdConjuge());
+            stmt.setDate(6, Date.valueOf(pessoaFisica.getDataNascimento()));
             stmt.executeUpdate();
             connectionPool.releaseConnection(connection);
         } catch (Exception e) {
@@ -98,29 +89,25 @@ public class PessoaFisicaRepository implements Repository<Producao> {
         }
     }
 
-    public void update(Producao producao) {
+    public void update(PessoaFisica pessoaFisica) {
         try {
-            String sql = String.format("UPDATE %s SET %s = ?, %s = ?, %s = ?, %s = ?, %s = ?, %s = ? WHERE %s = ? AND %s = ?", Producao.TABLE_NAME,
-                    Producao.COLLUMN_ID_PROPRIEDADE_NAME,
-                    Producao.COLLUMN_ID_PRODUTO_NAME,
-                    Producao.COLLUMN_DATA_INICIO_PROV_COLHEITA_NAME,
-                    Producao.COLLUMN_DATA_FIM_PROV_COLHEITA_NAME,
-                    Producao.COLLUMN_QTD_PROV_COLHIDA_NAME,
-                    Producao.COLLUMN_DATA_INICIO_REAL_COLHEITA_NAME,
-                    Producao.COLLUMN_DATA_FIM_REAL_COLHEITA_NAME,
-                    Producao.COLLUMN_QTD_REAL_COLHIDA_NAME
+            String sql = String.format("UPDATE %s SET %s = ?, %s = ?, %s = ?, %s = ?, %s = ? WHERE %s = ?", PessoaFisica.TABLE_NAME,
+                    PessoaFisica.COLLUMN_CPF_NAME,
+                    PessoaFisica.COLLUMN_RG_NAME,
+                    PessoaFisica.COLLUMN_NAME_NAME,
+                    PessoaFisica.COLLUMN_ID_CONJUGE_NAME,
+                    PessoaFisica.COLLUMN_DATA_NASCIMENTO_NAME,
+                    PessoaFisica.COLLUMN_ID_PROPRIETARIO_PF_NAME
             );
             ConnectionPool connectionPool = ConnectionPool.getInstance();
             Connection connection = connectionPool.getConnection();
             PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setDate(1, Date.valueOf(producao.getDataInicioColheitaProv()));
-            stmt.setDate(2, Date.valueOf(producao.getDataFimColheitaProv()));
-            stmt.setDouble(3, producao.getQtdProvColhida());
-            stmt.setDate(4, Date.valueOf(producao.getDataInicioColheitaReal()));
-            stmt.setDate(5, Date.valueOf(producao.getDataFimColheitaReal()));
-            stmt.setDouble(6, producao.getQtdRealColhida());
-            stmt.setInt(7, producao.getIdPropriedade());
-            stmt.setInt(8, producao.getIdProduto());
+            stmt.setInt(6, pessoaFisica.getIdProprietarioPessoaFisica());
+            stmt.setInt(1, pessoaFisica.getCpf());
+            stmt.setInt(2, pessoaFisica.getRg());
+            stmt.setString(3, pessoaFisica.getName());
+            stmt.setInt(4, pessoaFisica.getIdConjuge());
+            stmt.setDate(5, Date.valueOf(pessoaFisica.getDataNascimento()));
             stmt.executeUpdate();
             connectionPool.releaseConnection(connection);
         } catch (Exception e) {
