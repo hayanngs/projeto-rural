@@ -35,7 +35,7 @@ public class ProdutoRepository implements Repository<Produto> {
     }
 
     public List<Produto> findAll() throws SQLException {
-        String sql = String.format("SELECT * FROM %s", Produto.TABLE_NAME);
+        String sql = String.format("SELECT * FROM %s ORDER BY %s", Produto.TABLE_NAME, Produto.COLLUMN_ID_NAME);
         ArrayList<Produto> produtos = new ArrayList<>();
         ConnectionPool connectionPool = ConnectionPool.getInstance();
         Connection connection = connectionPool.getConnection();

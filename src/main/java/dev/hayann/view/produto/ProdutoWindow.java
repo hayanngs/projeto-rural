@@ -32,7 +32,7 @@ public class ProdutoWindow {
         panel.add(scrollPane, BorderLayout.CENTER);
 
         // Painel de formulário
-        JPanel formPanel = new JPanel(new GridLayout(4, 2, 10, 10));
+        JPanel formPanel = new JPanel(new GridLayout(3, 2, 10, 10));
         formPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JLabel descriptionLabel = new JLabel("Descrição:");
