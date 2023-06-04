@@ -1,13 +1,9 @@
 package dev.hayann.repository;
 
 import dev.hayann.database.ConnectionPool;
-import dev.hayann.model.Municipio;
 import dev.hayann.model.Produto;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +28,28 @@ public class ProdutoRepository implements Repository<Produto> {
             /* TODO: Criar método de render de erro para renderizar um JDialog de erro na tela */
             return null;
         }
+    }
+
+    public Produto findByDescricao(String descricao) throws SQLException {
+        String sql = String.format(
+                "SELECT * " +
+                        "FROM %s " +
+                        "WHERE %s ILIKE '%%%s%%'",
+                Produto.TABLE_NAME,
+                Produto.COLLUMN_DESCRIPTION_NAME,
+                descricao
+        );
+        ConnectionPool connectionPool = ConnectionPool.getInstance();
+        Connection connection = connectionPool.getConnection();
+        ResultSet resultSet = connection.createStatement().executeQuery(sql);
+        if (resultSet.next()) {
+            return new Produto(
+                    resultSet.getInt(Produto.COLLUMN_ID_NAME),
+                    resultSet.getString(Produto.COLLUMN_DESCRIPTION_NAME)
+            );
+        }
+        connectionPool.releaseConnection(connection);
+        return null;
     }
 
     public List<Produto> findAll() throws SQLException {

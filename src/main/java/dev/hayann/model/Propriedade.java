@@ -103,9 +103,6 @@ public class Propriedade implements Entity {
 
     @Override
     public String toString() {
-        return "Propriedade{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
+        return name;
     }
 }

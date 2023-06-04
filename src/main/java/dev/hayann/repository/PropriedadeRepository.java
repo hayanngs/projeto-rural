@@ -37,6 +37,41 @@ public class PropriedadeRepository implements Repository<Propriedade> {
         }
     }
 
+    public Propriedade findByName(String name) throws SQLException {
+        String sql = String.format(
+                "SELECT * " +
+                        "FROM %s p " +
+                        "INNER JOIN %s m ON m.%s = p.%s " +
+                        "WHERE p.%s ilike '%%%s%%'",
+                Propriedade.TABLE_NAME,
+                Municipio.TABLE_NAME,
+                Municipio.COLLUMN_ID_NAME,
+                Propriedade.COLLUMN_ID_MUNICIPIO_NAME,
+                Propriedade.COLLUMN_NAME_NAME,
+                name
+        );
+        ConnectionPool connectionPool = ConnectionPool.getInstance();
+        Connection connection = connectionPool.getConnection();
+        ResultSet resultSet = connection.createStatement().executeQuery(sql);
+        Propriedade propriedade = null;
+        if (resultSet.next()) {
+            propriedade = new Propriedade(
+                    resultSet.getInt(Propriedade.COLLUMN_ID_NAME),
+                    resultSet.getString(Propriedade.COLLUMN_NAME_NAME),
+                    resultSet.getDouble(Propriedade.COLLUMN_AREA_PROPRIEDADE_NAME),
+                    resultSet.getDouble(Propriedade.COLLUMN_DISTANCIA_MUNICIPIO_NAME),
+                    resultSet.getDouble(Propriedade.COLLUMN_VALOR_AQUISICAO_NAME),
+                    new Municipio(
+                            resultSet.getInt(Municipio.COLLUMN_ID_NAME),
+                            resultSet.getString(Municipio.COLLUMN_NAME_NAME),
+                            resultSet.getString(Municipio.COLLUMN_UF_NAME)
+                    )
+            );
+        }
+        connectionPool.releaseConnection(connection);
+        return propriedade;
+    }
+
     public List<Propriedade> findAll() throws SQLException {
         String sql = String.format(
                 "SELECT p.%s, p.%s, p.%s, p.%s, p.%s, m.%s, m.%s, m.%s " +

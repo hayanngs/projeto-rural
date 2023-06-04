@@ -2,6 +2,7 @@ package dev.hayann;
 
 import dev.hayann.database.InicializadorDoBD;
 import dev.hayann.view.municipio.MunicipioWindow;
+import dev.hayann.view.producao.ProducaoWindow;
 import dev.hayann.view.produto.ProdutoWindow;
 import dev.hayann.view.propriedade.PropriedadeWindow;
 import dev.hayann.view.proprietario.ProprietarioWindow;
@@ -20,10 +21,12 @@ public class MainApp extends JFrame {
 
     public static ProprietarioWindow proprietarioWindow = new ProprietarioWindow();
 
+    public static ProducaoWindow producaoWindow = new ProducaoWindow();
+
     public MainApp() {
         setTitle("Gerenciamento Rural");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 600);
+        setSize(1000, 800);
         setLayout(new BorderLayout());
 
         tabbedPane = new JTabbedPane();
@@ -32,6 +35,7 @@ public class MainApp extends JFrame {
         tabbedPane.addTab("Produto", produtoWindow.getPanel());
         tabbedPane.addTab("Proprieade", propriedadeWindow.getPanel());
         tabbedPane.addTab("Proprietario", proprietarioWindow.getPanel());
+        tabbedPane.addTab("Produção", producaoWindow.getPanel());
 
         add(tabbedPane, BorderLayout.CENTER);
 

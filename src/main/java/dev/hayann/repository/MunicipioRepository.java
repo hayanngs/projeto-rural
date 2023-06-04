@@ -2,6 +2,7 @@ package dev.hayann.repository;
 
 import dev.hayann.database.ConnectionPool;
 import dev.hayann.model.Municipio;
+import dev.hayann.view.municipio.MunicipioUpdate;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -32,6 +33,29 @@ public class MunicipioRepository implements Repository<Municipio> {
             /* TODO: Criar método de render de erro para renderizar um JDialog de erro na tela */
             return null;
         }
+    }
+
+    public Municipio findByName(String name) throws SQLException {
+        String sql = String.format(
+                "SELECT * FROM %s m WHERE m.%s ILIKE '%%%s%%'",
+                Municipio.TABLE_NAME,
+                Municipio.COLLUMN_NAME_NAME,
+                name
+        );
+        ArrayList<Municipio> municipios = new ArrayList<>();
+        ConnectionPool connectionPool = ConnectionPool.getInstance();
+        Connection connection = connectionPool.getConnection();
+        ResultSet resultSet = connection.createStatement().executeQuery(sql);
+        Municipio municipio = null;
+        if (resultSet.next()) {
+            municipio = new Municipio(
+                    resultSet.getInt(Municipio.COLLUMN_ID_NAME),
+                    resultSet.getString(Municipio.COLLUMN_NAME_NAME),
+                    resultSet.getString(Municipio.COLLUMN_UF_NAME)
+            );
+        }
+        connectionPool.releaseConnection(connection);
+        return municipio;
     }
 
     public List<Municipio> findAll() throws SQLException {

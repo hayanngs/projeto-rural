@@ -2,6 +2,7 @@ package dev.hayann.view.propriedade;
 
 import dev.hayann.model.Municipio;
 import dev.hayann.model.Propriedade;
+import dev.hayann.repository.MunicipioRepository;
 import dev.hayann.repository.PropriedadeRepository;
 import dev.hayann.view.campos.MunicipioComboBox;
 import dev.hayann.view.campos.NumberTextField;
@@ -18,6 +19,8 @@ import java.util.Vector;
 public class PropriedadeWindow {
 
     private PropriedadeRepository propriedadeRepository = new PropriedadeRepository();
+
+    private MunicipioRepository municipioRepository = new MunicipioRepository();
     private JPanel panel;
     private JTable table;
     private DefaultTableModel tableModel;
@@ -92,6 +95,7 @@ public class PropriedadeWindow {
                     addRow(propriedade);
                     clearFields();
                 } catch (Exception exception) {
+                    exception.printStackTrace();
                     new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.ERROR_INSERT);
                 }
             }
@@ -104,15 +108,17 @@ public class PropriedadeWindow {
                 try {
                     Integer id = Integer.parseInt(tableModel.getValueAt(selectedRow, 0).toString());
                     String name = tableModel.getValueAt(selectedRow, 1).toString();
-                    Double area = Double.parseDouble(tableModel.getValueAt(selectedRow, 2).toString());
-                    Double distancia = Double.parseDouble(tableModel.getValueAt(selectedRow, 3).toString());
-                    Double valor = Double.parseDouble(tableModel.getValueAt(selectedRow, 4).toString());
+                    Municipio municipio = municipioRepository.findByName(tableModel.getValueAt(selectedRow, 1).toString());
+                    Double area = Double.parseDouble(tableModel.getValueAt(selectedRow, 3).toString());
+                    Double distancia = Double.parseDouble(tableModel.getValueAt(selectedRow, 4).toString());
+                    Double valor = Double.parseDouble(tableModel.getValueAt(selectedRow, 5).toString());
                     Propriedade propriedade = new Propriedade(id, name, area, distancia, valor);
                     if (openUpdateDialog(propriedade)) {
                         propriedadeRepository.update(propriedade);
                         loadData();
                     }
                 } catch (Exception exception) {
+                    exception.printStackTrace();
                     new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.ERROR_UPDATE);
                 }
             }
@@ -130,6 +136,7 @@ public class PropriedadeWindow {
                         tableModel.removeRow(selectedRow);
                     }
                 } catch (SQLException ex) {
+                    ex.printStackTrace();
                     new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.ERROR_DELETE);
                 }
             }

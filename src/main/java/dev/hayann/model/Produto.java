@@ -38,9 +38,6 @@ public class Produto implements Entity {
 
     @Override
     public String toString() {
-        return "Produto{" +
-                "id=" + id +
-                ", descricao='" + descricao + '\'' +
-                '}';
+        return descricao;
     }
 }
