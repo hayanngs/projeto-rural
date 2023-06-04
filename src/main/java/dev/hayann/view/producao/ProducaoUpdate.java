@@ -7,6 +7,8 @@ import dev.hayann.view.campos.textfield.DateTextField;
 import dev.hayann.view.campos.textfield.NumberTextField;
 import dev.hayann.view.campos.combobox.ProdutoComboBox;
 import dev.hayann.view.campos.combobox.PropriedadeComboBox;
+import dev.hayann.view.dialog.ErrorDialog;
+import dev.hayann.view.messages.GenericMessages;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,8 +19,8 @@ public class ProducaoUpdate extends JDialog {
 
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private JTextField txtId;
-    private JComboBox propriedadeComboBox = PropriedadeComboBox.getPropriedadeComboBoxUpdate();
-    private JComboBox produtoComboBox = ProdutoComboBox.getProdutoComboBoxUpdate();
+    private JComboBox propriedadeComboBoxUpdate = PropriedadeComboBox.getPropriedadeComboBoxUpdate();
+    private JComboBox produtoComboBoxUpdate = ProdutoComboBox.getProdutoComboBoxUpdate();
     private JTextField dataInicioProvField = DateTextField.getDateTextField();
     private JTextField dataFimProvField = DateTextField.getDateTextField();
     private JTextField colheitaProvField = NumberTextField.getNumberTextField();
@@ -53,9 +55,9 @@ public class ProducaoUpdate extends JDialog {
         txtId.setBackground(Color.LIGHT_GRAY);
         txtId.setBorder(BorderFactory.createEtchedBorder());
 
-        propriedadeComboBox.setBorder(BorderFactory.createEtchedBorder());
+        propriedadeComboBoxUpdate.setBorder(BorderFactory.createEtchedBorder());
 
-        produtoComboBox.setBorder(BorderFactory.createEtchedBorder());
+        produtoComboBoxUpdate.setBorder(BorderFactory.createEtchedBorder());
 
         dataInicioProvField.setText(producao.getDataInicioColheitaProv().format(formatter));
         dataInicioProvField.setBackground(Color.WHITE);
@@ -84,9 +86,9 @@ public class ProducaoUpdate extends JDialog {
         panel.add(lblId);
         panel.add(txtId);
         panel.add(propriedadeLabel);
-        panel.add(propriedadeComboBox);
+        panel.add(propriedadeComboBoxUpdate);
         panel.add(produtoLabel);
-        panel.add(produtoComboBox);
+        panel.add(produtoComboBoxUpdate);
         panel.add(dataInicioProvLabel);
         panel.add(dataInicioProvField);
         panel.add(dataFimProvLabel);
@@ -102,16 +104,25 @@ public class ProducaoUpdate extends JDialog {
 
         JButton btnSalvar = new JButton("Salvar");
         btnSalvar.addActionListener(e -> {
-            producao.setPropriedade((Propriedade) propriedadeComboBox.getSelectedItem());
-            producao.setProduto((Produto) produtoComboBox.getSelectedItem());
-            producao.setDataInicioColheitaProv(LocalDate.parse(dataInicioProvField.getText(), formatter));
-            producao.setDataFimColheitaProv(LocalDate.parse(dataFimProvField.getText(), formatter));
-            producao.setQtdProvColhida(Double.parseDouble(colheitaProvField.getText()));
-            producao.setDataInicioColheitaReal(LocalDate.parse(dataInicioRealField.getText(), formatter));
-            producao.setDataFimColheitaReal(LocalDate.parse(dataFimRealField.getText(),formatter));
-            producao.setQtdRealColhida(Double.parseDouble(colheitaRealField.getText()));
-            salvo = true;
-            dispose();
+            if (produtoComboBoxUpdate.getSelectedItem() == null || produtoComboBoxUpdate.getSelectedIndex() == 0 ||
+                    propriedadeComboBoxUpdate.getSelectedItem() == null || propriedadeComboBoxUpdate.getSelectedIndex() == 0) {
+                new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(parent), GenericMessages.PRODUCAO_EMPTY_COMBO_BOX_ERROR);
+            } else {
+                try {
+                    producao.setPropriedade((Propriedade) propriedadeComboBoxUpdate.getSelectedItem());
+                    producao.setProduto((Produto) produtoComboBoxUpdate.getSelectedItem());
+                    producao.setDataInicioColheitaProv(LocalDate.parse(dataInicioProvField.getText(), formatter));
+                    producao.setDataFimColheitaProv(LocalDate.parse(dataFimProvField.getText(), formatter));
+                    producao.setQtdProvColhida(Double.parseDouble(colheitaProvField.getText()));
+                    producao.setDataInicioColheitaReal(LocalDate.parse(dataInicioRealField.getText(), formatter));
+                    producao.setDataFimColheitaReal(LocalDate.parse(dataFimRealField.getText(), formatter));
+                    producao.setQtdRealColhida(Double.parseDouble(colheitaRealField.getText()));
+                    salvo = true;
+                    dispose();
+                } catch (Exception exception) {
+                    new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(parent), GenericMessages.PRODUCAO_INVALID_DATA_ERROR);
+                }
+            }
         });
 
         JButton btnCancelar = new JButton("Cancelar");

@@ -25,11 +25,11 @@ public class PessoaFisicaUpdate extends JDialog {
     public PessoaFisicaUpdate(Frame parent, PessoaFisica pessoaFisica) {
         super(parent, "Atualizar Cadastro", true);
         setLayout(new BorderLayout());
-        setSize(300, 200);
+        setSize(330, 370);
         setLocationRelativeTo(null);
         setResizable(false);
 
-        JPanel panel = new JPanel(new GridLayout(3, 2));
+        JPanel panel = new JPanel(new GridLayout(6, 2));
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JLabel lblProprietario = new JLabel("Proprietário:");

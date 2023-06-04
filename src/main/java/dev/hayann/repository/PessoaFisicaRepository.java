@@ -24,8 +24,8 @@ public class PessoaFisicaRepository implements Repository<PessoaFisica> {
                         resultSet.getInt(PessoaFisica.COLLUMN_CPF_NAME),
                         resultSet.getInt(PessoaFisica.COLLUMN_RG_NAME),
                         resultSet.getString(PessoaFisica.COLLUMN_NAME_NAME),
-                        resultSet.getInt(PessoaFisica.COLLUMN_ID_CONJUGE_NAME),
-                        resultSet.getDate(PessoaFisica.COLLUMN_DATA_NASCIMENTO_NAME).toLocalDate()
+                        resultSet.getDate(PessoaFisica.COLLUMN_DATA_NASCIMENTO_NAME).toLocalDate(),
+                        resultSet.getInt(PessoaFisica.COLLUMN_ID_CONJUGE_NAME)
                 );
             } else return null;
         } catch (Exception e) {
@@ -37,12 +37,12 @@ public class PessoaFisicaRepository implements Repository<PessoaFisica> {
     public PessoaFisica findByName(String name) throws SQLException {
         String sql = String.format(
                 "SELECT * " +
-                "FROM %s pf " +
-                "WHERE pf.%s ILIKE '%%%s%%'",
+                        "FROM %s pf " +
+                        "WHERE pf.%s ILIKE '%%%s%%'",
                 PessoaFisica.TABLE_NAME,
                 PessoaFisica.COLLUMN_NAME_NAME,
                 name
-                );
+        );
         ConnectionPool connectionPool = ConnectionPool.getInstance();
         Connection connection = connectionPool.getConnection();
         ResultSet resultSet = connection.createStatement().executeQuery(sql);
@@ -53,8 +53,8 @@ public class PessoaFisicaRepository implements Repository<PessoaFisica> {
                     resultSet.getInt(PessoaFisica.COLLUMN_CPF_NAME),
                     resultSet.getInt(PessoaFisica.COLLUMN_RG_NAME),
                     resultSet.getString(PessoaFisica.COLLUMN_NAME_NAME),
-                    resultSet.getInt(PessoaFisica.COLLUMN_ID_CONJUGE_NAME),
-                    resultSet.getDate(PessoaFisica.COLLUMN_DATA_NASCIMENTO_NAME).toLocalDate()
+                    resultSet.getDate(PessoaFisica.COLLUMN_DATA_NASCIMENTO_NAME).toLocalDate(),
+                    resultSet.getInt(PessoaFisica.COLLUMN_ID_CONJUGE_NAME)
             );
         }
         connectionPool.releaseConnection(connection);
@@ -73,8 +73,8 @@ public class PessoaFisicaRepository implements Repository<PessoaFisica> {
                     resultSet.getInt(PessoaFisica.COLLUMN_CPF_NAME),
                     resultSet.getInt(PessoaFisica.COLLUMN_RG_NAME),
                     resultSet.getString(PessoaFisica.COLLUMN_NAME_NAME),
-                    resultSet.getInt(PessoaFisica.COLLUMN_ID_CONJUGE_NAME),
-                    resultSet.getDate(PessoaFisica.COLLUMN_DATA_NASCIMENTO_NAME).toLocalDate()
+                    resultSet.getDate(PessoaFisica.COLLUMN_DATA_NASCIMENTO_NAME).toLocalDate(),
+                    resultSet.getInt(PessoaFisica.COLLUMN_ID_CONJUGE_NAME)
             ));
         }
         connectionPool.releaseConnection(connection);
@@ -90,14 +90,14 @@ public class PessoaFisicaRepository implements Repository<PessoaFisica> {
                         PessoaFisica.COLLUMN_NAME_NAME,
                         PessoaFisica.COLLUMN_DATA_NASCIMENTO_NAME
                 ) :
-        String.format("INSERT INTO %s (%s, %s, %s, %s, %s, %s) VALUES (?, ?, ?, ?, ?, ?)", PessoaFisica.TABLE_NAME,
-                PessoaFisica.COLLUMN_ID_PROPRIETARIO_PF_NAME,
-                PessoaFisica.COLLUMN_CPF_NAME,
-                PessoaFisica.COLLUMN_RG_NAME,
-                PessoaFisica.COLLUMN_NAME_NAME,
-                PessoaFisica.COLLUMN_ID_CONJUGE_NAME,
-                PessoaFisica.COLLUMN_DATA_NASCIMENTO_NAME
-        );
+                String.format("INSERT INTO %s (%s, %s, %s, %s, %s, %s) VALUES (?, ?, ?, ?, ?, ?)", PessoaFisica.TABLE_NAME,
+                        PessoaFisica.COLLUMN_ID_PROPRIETARIO_PF_NAME,
+                        PessoaFisica.COLLUMN_CPF_NAME,
+                        PessoaFisica.COLLUMN_RG_NAME,
+                        PessoaFisica.COLLUMN_NAME_NAME,
+                        PessoaFisica.COLLUMN_ID_CONJUGE_NAME,
+                        PessoaFisica.COLLUMN_DATA_NASCIMENTO_NAME
+                );
         ConnectionPool connectionPool = ConnectionPool.getInstance();
         Connection connection = connectionPool.getConnection();
         PreparedStatement stmt = connection.prepareStatement(sql);
@@ -117,23 +117,29 @@ public class PessoaFisicaRepository implements Repository<PessoaFisica> {
     }
 
     public void update(PessoaFisica pessoaFisica) throws SQLException {
+        boolean isNotConjuge = pessoaFisica.getIdConjuge() == null || pessoaFisica.getIdConjuge() == 0;
         String sql = String.format("UPDATE %s SET %s = ?, %s = ?, %s = ?, %s = ?, %s = ? WHERE %s = ?", PessoaFisica.TABLE_NAME,
                 PessoaFisica.COLLUMN_CPF_NAME,
                 PessoaFisica.COLLUMN_RG_NAME,
                 PessoaFisica.COLLUMN_NAME_NAME,
-                PessoaFisica.COLLUMN_ID_CONJUGE_NAME,
                 PessoaFisica.COLLUMN_DATA_NASCIMENTO_NAME,
+                PessoaFisica.COLLUMN_ID_CONJUGE_NAME,
                 PessoaFisica.COLLUMN_ID_PROPRIETARIO_PF_NAME
         );
         ConnectionPool connectionPool = ConnectionPool.getInstance();
         Connection connection = connectionPool.getConnection();
         PreparedStatement stmt = connection.prepareStatement(sql);
-        stmt.setInt(6, pessoaFisica.getIdProprietarioPessoaFisica());
         stmt.setInt(1, pessoaFisica.getCpf());
         stmt.setInt(2, pessoaFisica.getRg());
         stmt.setString(3, pessoaFisica.getName());
-        stmt.setInt(4, pessoaFisica.getIdConjuge());
-        stmt.setDate(5, Date.valueOf(pessoaFisica.getDataNascimento()));
+        stmt.setDate(4, Date.valueOf(pessoaFisica.getDataNascimento()));
+        if (isNotConjuge) {
+            stmt.setNull(5, 0);
+            stmt.setInt(6, pessoaFisica.getIdProprietarioPessoaFisica());
+        } else {
+            stmt.setInt(5, pessoaFisica.getIdConjuge());
+            stmt.setInt(6, pessoaFisica.getIdProprietarioPessoaFisica());
+        }
         stmt.executeUpdate();
         connectionPool.releaseConnection(connection);
     }

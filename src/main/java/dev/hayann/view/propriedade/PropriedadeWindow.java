@@ -91,11 +91,15 @@ public class PropriedadeWindow {
                 new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.ERROR_INCOMPLETE_FIELD);
             } else {
                 try {
-                    Propriedade propriedade = new Propriedade(name, Double.parseDouble(area), Double.parseDouble(distancia), Double.parseDouble(valor), (Municipio) municipioComboBox.getSelectedItem());
-                    propriedadeRepository.persist(propriedade);
-                    addRow(propriedade);
-                    clearFields();
-                    PropriedadeComboBox.reloadPropriedadeComboBox();
+                    if (municipioComboBox.getSelectedIndex() == 0 || municipioComboBox.getSelectedItem() == null) {
+                        new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.MUNICIPIO_EMPTY_COMBO_BOX_ERROR);
+                    } else {
+                        Propriedade propriedade = new Propriedade(name, Double.parseDouble(area), Double.parseDouble(distancia), Double.parseDouble(valor), (Municipio) municipioComboBox.getSelectedItem());
+                        propriedadeRepository.persist(propriedade);
+                        addRow(propriedade);
+                        clearFields();
+                        PropriedadeComboBox.reloadPropriedadeComboBox();
+                    }
                 } catch (Exception exception) {
                     exception.printStackTrace();
                     new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.ERROR_INSERT);
@@ -114,7 +118,7 @@ public class PropriedadeWindow {
                     Double area = Double.parseDouble(tableModel.getValueAt(selectedRow, 3).toString());
                     Double distancia = Double.parseDouble(tableModel.getValueAt(selectedRow, 4).toString());
                     Double valor = Double.parseDouble(tableModel.getValueAt(selectedRow, 5).toString());
-                    Propriedade propriedade = new Propriedade(id, name, area, distancia, valor);
+                    Propriedade propriedade = new Propriedade(id, name, area, distancia, valor, municipio);
                     if (openUpdateDialog(propriedade)) {
                         propriedadeRepository.update(propriedade);
                         loadData();
@@ -206,6 +210,7 @@ public class PropriedadeWindow {
         areaField.setText("");
         distanciaField.setText("");
         valorField.setText("");
+        municipioComboBox.setSelectedIndex(0);
     }
 
     public JPanel getPanel() {

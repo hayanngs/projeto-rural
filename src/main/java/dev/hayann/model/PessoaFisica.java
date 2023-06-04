@@ -30,13 +30,13 @@ public class PessoaFisica {
 
     private LocalDate dataNascimento;
 
-    public PessoaFisica(Integer idProprietarioPessoaFisica, Integer cpf, Integer rg, String name, Integer idConjuge, LocalDate dataNascimento) {
+    public PessoaFisica(Integer idProprietarioPessoaFisica, Integer cpf, Integer rg, String name, LocalDate dataNascimento, Integer idConjuge) {
         this.idProprietarioPessoaFisica = idProprietarioPessoaFisica;
         this.cpf = cpf;
         this.rg = rg;
         this.name = name;
-        this.idConjuge = idConjuge;
         this.dataNascimento = dataNascimento;
+        this.idConjuge = idConjuge;
     }
 
     public Integer getIdProprietarioPessoaFisica() {

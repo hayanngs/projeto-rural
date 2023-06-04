@@ -1,12 +1,19 @@
 package dev.hayann.view.propriedade;
 
+import dev.hayann.model.Municipio;
 import dev.hayann.model.Propriedade;
+import dev.hayann.repository.MunicipioRepository;
+import dev.hayann.view.campos.combobox.MunicipioComboBox;
 import dev.hayann.view.campos.textfield.NumberTextField;
+import dev.hayann.view.dialog.ErrorDialog;
+import dev.hayann.view.messages.GenericMessages;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class PropriedadeUpdate extends JDialog{
+
+    private MunicipioRepository municipioRepository = new MunicipioRepository();
 
     private JTextField txtId;
 
@@ -18,6 +25,8 @@ public class PropriedadeUpdate extends JDialog{
 
     private JTextField txtValor = NumberTextField.getNumberTextField();
 
+    private JComboBox municipioComboBoxUpdate = MunicipioComboBox.getMunicipioComboBoxUpdate();
+
     boolean salvo = false;
 
     public PropriedadeUpdate(Frame parent, Propriedade propriedade) {
@@ -27,7 +36,7 @@ public class PropriedadeUpdate extends JDialog{
         setLocationRelativeTo(null);
         setResizable(false);
 
-        JPanel panel = new JPanel(new GridLayout(5, 2));
+        JPanel panel = new JPanel(new GridLayout(6, 2));
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JLabel lblId = new JLabel("ID:");
@@ -56,6 +65,10 @@ public class PropriedadeUpdate extends JDialog{
         txtValor.setBackground(Color.WHITE);
         txtValor.setBorder(BorderFactory.createEtchedBorder());
 
+        JLabel lblMunicipio = new JLabel("Município:");
+        municipioComboBoxUpdate.setBackground(Color.WHITE);
+        municipioComboBoxUpdate.setBorder(BorderFactory.createEtchedBorder());
+
         panel.add(lblId);
         panel.add(txtId);
         panel.add(lblName);
@@ -66,15 +79,22 @@ public class PropriedadeUpdate extends JDialog{
         panel.add(txtDistancia);
         panel.add(lblValor);
         panel.add(txtValor);
+        panel.add(lblMunicipio);
+        panel.add(municipioComboBoxUpdate);
 
         JButton btnSalvar = new JButton("Salvar");
         btnSalvar.addActionListener(e -> {
-            propriedade.setName(txtName.getText());
-            propriedade.setAreaPropriedade(Double.parseDouble(txtArea.getText()));
-            propriedade.setDistanciaMunicipio(Double.parseDouble(txtDistancia.getText()));
-            propriedade.setValorAquisicao(Double.parseDouble(txtValor.getText()));
-            salvo = true;
-            dispose();
+            if (municipioComboBoxUpdate.getSelectedItem() == null || municipioComboBoxUpdate.getSelectedIndex() == 0) {
+                new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(parent), GenericMessages.MUNICIPIO_EMPTY_COMBO_BOX_ERROR);
+            } else {
+                propriedade.setName(txtName.getText());
+                propriedade.setAreaPropriedade(Double.parseDouble(txtArea.getText()));
+                propriedade.setDistanciaMunicipio(Double.parseDouble(txtDistancia.getText()));
+                propriedade.setValorAquisicao(Double.parseDouble(txtValor.getText()));
+                propriedade.setMunicipio((Municipio) municipioComboBoxUpdate.getSelectedItem());
+                salvo = true;
+                dispose();
+            }
         });
 
         JButton btnCancelar = new JButton("Cancelar");

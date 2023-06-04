@@ -140,12 +140,13 @@ public class PropriedadeRepository implements Repository<Propriedade> {
 
     public void update(Propriedade propriedade) throws SQLException {
         String sql = String.format(
-                "UPDATE %s SET %s = ?, %s = ?, %s = ?, %s = ? WHERE %s = ?",
+                "UPDATE %s SET %s = ?, %s = ?, %s = ?, %s = ?, %s = ? WHERE %s = ?",
                 Propriedade.TABLE_NAME,
                 Propriedade.COLLUMN_NAME_NAME,
                 Propriedade.COLLUMN_AREA_PROPRIEDADE_NAME,
                 Propriedade.COLLUMN_DISTANCIA_MUNICIPIO_NAME,
                 Propriedade.COLLUMN_VALOR_AQUISICAO_NAME,
+                Propriedade.COLLUMN_ID_MUNICIPIO_NAME,
                 Propriedade.COLLUMN_ID_NAME
         );
         ConnectionPool connectionPool = ConnectionPool.getInstance();
@@ -155,7 +156,8 @@ public class PropriedadeRepository implements Repository<Propriedade> {
         stmt.setDouble(2, propriedade.getAreaPropriedade());
         stmt.setDouble(3, propriedade.getDistanciaMunicipio());
         stmt.setDouble(4, propriedade.getValorAquisicao());
-        stmt.setInt(5, propriedade.getId());
+        stmt.setInt(5, propriedade.getMunicipio().getId());
+        stmt.setInt(6, propriedade.getId());
         stmt.executeUpdate();
         connectionPool.releaseConnection(connection);
     }

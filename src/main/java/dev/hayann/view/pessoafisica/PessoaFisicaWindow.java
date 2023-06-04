@@ -52,7 +52,7 @@ public class PessoaFisicaWindow {
         panel.add(scrollPane, BorderLayout.CENTER);
 
         // Painel de formulário
-        JPanel formPanel = new JPanel(new GridLayout(9, 1, 10, 10));
+        JPanel formPanel = new JPanel(new GridLayout(7, 1, 10, 10));
         formPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JLabel proprietarioLabel = new JLabel("Proprietário:");
@@ -94,32 +94,36 @@ public class PessoaFisicaWindow {
 
         JButton addButton = new JButton("Adicionar");
         addButton.addActionListener(e -> {
-            String idProprietario = ((Proprietario) Objects.requireNonNull(proprietarioComboBox.getSelectedItem())).getId().toString();
-            String name = nameField.getText();
-            String CPF = CPFField.getText();
-            String RG = RGField.getText();
-            String nascimento = nascimentoField.getText();
-
-            if (idProprietario.isEmpty() || name.isEmpty() || CPF.isEmpty() || RG.isEmpty() || nascimento.isEmpty()) {
-                new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.ERROR_INCOMPLETE_FIELD);
+            if (proprietarioComboBox.getSelectedItem() == null || proprietarioComboBox.getSelectedIndex() == 0) {
+                new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.PROPRIETARIO_EMPTY_COMBO_BOX_ERROR);
             } else {
-                try {
-                    Integer idConjuge = conjugeComboBox.getSelectedItem() == null ? null : ((PessoaFisica) (conjugeComboBox.getSelectedItem())).getIdProprietarioPessoaFisica();
-                    PessoaFisica pessoaFisica = new PessoaFisica(
-                            Integer.parseInt(idProprietario),
-                            Integer.parseInt(CPF),
-                            Integer.parseInt(RG),
-                            name,
-                            idConjuge,
-                            LocalDate.parse(nascimento, formatter)
-                    );
-                    pessoaFisicaRepository.persist(pessoaFisica);
-                    addRow(pessoaFisica);
-                    clearFields();
-                    PessoaFisicaComboBox.reloadPessoaFisicaComboBox();
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                    new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.ERROR_INSERT);
+                String idProprietario = ((Proprietario) Objects.requireNonNull(proprietarioComboBox.getSelectedItem())).getId().toString();
+                String name = nameField.getText();
+                String CPF = CPFField.getText();
+                String RG = RGField.getText();
+                String nascimento = nascimentoField.getText();
+
+                if (idProprietario.isEmpty() || name.isEmpty() || CPF.isEmpty() || RG.isEmpty() || nascimento.isEmpty()) {
+                    new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.ERROR_INCOMPLETE_FIELD);
+                } else {
+                    try {
+                        Integer idConjuge = conjugeComboBox.getSelectedItem() == null || conjugeComboBox.getSelectedIndex() == 0 ? null : ((PessoaFisica) (conjugeComboBox.getSelectedItem())).getIdProprietarioPessoaFisica();
+                        PessoaFisica pessoaFisica = new PessoaFisica(
+                                Integer.parseInt(idProprietario),
+                                Integer.parseInt(CPF),
+                                Integer.parseInt(RG),
+                                name,
+                                LocalDate.parse(nascimento, formatter),
+                                idConjuge
+                        );
+                        pessoaFisicaRepository.persist(pessoaFisica);
+                        addRow(pessoaFisica);
+                        clearFields();
+                        PessoaFisicaComboBox.reloadPessoaFisicaComboBox();
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
+                        new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.ERROR_INSERT);
+                    }
                 }
             }
         });
@@ -134,14 +138,15 @@ public class PessoaFisicaWindow {
                     String CPF = tableModel.getValueAt(selectedRow, 2).toString();
                     String RG = tableModel.getValueAt(selectedRow, 3).toString();
                     String nascimento = tableModel.getValueAt(selectedRow, 4).toString();
-                    Integer idConjuge = pessoaFisicaRepository.findByName(tableModel.getValueAt(selectedRow, 4).toString()).getIdProprietarioPessoaFisica();
+                    PessoaFisica conjuge = pessoaFisicaRepository.findByName(tableModel.getValueAt(selectedRow, 5).toString());
+                    Integer idConjuge = conjuge == null ? null : conjuge.getIdProprietarioPessoaFisica();
                     PessoaFisica pessoaFisica = new PessoaFisica(
                             Integer.parseInt(idProprietario),
                             Integer.parseInt(CPF),
                             Integer.parseInt(RG),
                             name,
-                            idConjuge,
-                            LocalDate.parse(nascimento, formatter)
+                            LocalDate.parse(nascimento, formatter),
+                            idConjuge
                     );
                     if (openUpdateDialog(pessoaFisica)) {
                         pessoaFisicaRepository.update(pessoaFisica);

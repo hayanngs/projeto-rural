@@ -86,25 +86,25 @@ public class ProducaoWindow {
         dataInicioProvPanel.add(dataInicioProvField);
         formPanel.add(dataInicioProvPanel);
 
-        JPanel dataInicioRealPanel = new JPanel(new GridLayout(1, 2, -10, 10));
-        dataInicioRealPanel.add(dataInicioRealLabel);
-        dataInicioRealPanel.add(dataInicioRealField);
-        formPanel.add(dataInicioRealPanel);
-
         JPanel dataFimProvPanel = new JPanel(new GridLayout(1, 2, -10, 10));
         dataFimProvPanel.add(dataFimProvLabel);
         dataFimProvPanel.add(dataFimProvField);
         formPanel.add(dataFimProvPanel);
 
-        JPanel dataFimRealPanel = new JPanel(new GridLayout(1, 2, -10, 10));
-        dataFimRealPanel.add(dataFimRealLabel);
-        dataFimRealPanel.add(dataFimRealField);
-        formPanel.add(dataFimRealPanel);
-
         JPanel colheitaProvPanel = new JPanel(new GridLayout(1, 2, -10, 10));
         colheitaProvPanel.add(colheitaProvLabel);
         colheitaProvPanel.add(colheitaProvField);
         formPanel.add(colheitaProvPanel);
+
+        JPanel dataInicioRealPanel = new JPanel(new GridLayout(1, 2, -10, 10));
+        dataInicioRealPanel.add(dataInicioRealLabel);
+        dataInicioRealPanel.add(dataInicioRealField);
+        formPanel.add(dataInicioRealPanel);
+
+        JPanel dataFimRealPanel = new JPanel(new GridLayout(1, 2, -10, 10));
+        dataFimRealPanel.add(dataFimRealLabel);
+        dataFimRealPanel.add(dataFimRealField);
+        formPanel.add(dataFimRealPanel);
 
         JPanel colheitaRealPanel = new JPanel(new GridLayout(1, 2, -10, 10));
         colheitaRealPanel.add(colheitaRealLabel);
@@ -113,33 +113,38 @@ public class ProducaoWindow {
 
         JButton addButton = new JButton("Adicionar");
         addButton.addActionListener(e -> {
-            String dataInicioProv = dataInicioProvField.getText();
-            String dataFimProv = dataInicioProvField.getText();
-            String colheitaProv = colheitaProvField.getText();
-            String dataInicioReal = dataInicioProvField.getText();
-            String dataFimReal = dataInicioProvField.getText();
-            String colheitaReal = colheitaRealField.getText();
-
-            if (dataInicioProv.isEmpty() || (dataFimProv.isEmpty() && colheitaProv.isEmpty())) {
-                new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.ERROR_INCOMPLETE_FIELD);
+            if (produtoComboBox.getSelectedItem() == null || produtoComboBox.getSelectedIndex() == 0 ||
+                    propriedadeComboBox.getSelectedItem() == null || propriedadeComboBox.getSelectedIndex() == 0) {
+                new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.PRODUCAO_EMPTY_COMBO_BOX_ERROR);
             } else {
-                try {
-                    Producao producao = new Producao(
-                            LocalDate.parse(dataInicioProv, formatter),
-                            LocalDate.parse(dataFimProv, formatter),
-                            Double.parseDouble(colheitaProv),
-                            LocalDate.parse(dataInicioReal, formatter),
-                            LocalDate.parse(dataFimReal, formatter),
-                            Double.parseDouble(colheitaReal),
-                            (Propriedade) propriedadeComboBox.getSelectedItem(),
-                            (Produto) produtoComboBox.getSelectedItem()
-                    );
-                    producaoRepository.persist(producao);
-                    addRow(producao);
-                    clearFields();
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                    new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.ERROR_INSERT);
+                String dataInicioProv = dataInicioProvField.getText();
+                String dataFimProv = dataInicioProvField.getText();
+                String colheitaProv = colheitaProvField.getText();
+                String dataInicioReal = dataInicioProvField.getText();
+                String dataFimReal = dataInicioProvField.getText();
+                String colheitaReal = colheitaRealField.getText();
+
+                if (dataInicioProv.isEmpty() || (dataFimProv.isEmpty() && colheitaProv.isEmpty())) {
+                    new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.ERROR_INCOMPLETE_FIELD);
+                } else {
+                    try {
+                        Producao producao = new Producao(
+                                LocalDate.parse(dataInicioProv, formatter),
+                                LocalDate.parse(dataFimProv, formatter),
+                                Double.parseDouble(colheitaProv),
+                                LocalDate.parse(dataInicioReal, formatter),
+                                LocalDate.parse(dataFimReal, formatter),
+                                Double.parseDouble(colheitaReal),
+                                (Propriedade) propriedadeComboBox.getSelectedItem(),
+                                (Produto) produtoComboBox.getSelectedItem()
+                        );
+                        producaoRepository.persist(producao);
+                        addRow(producao);
+                        clearFields();
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
+                        new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.ERROR_INSERT);
+                    }
                 }
             }
         });

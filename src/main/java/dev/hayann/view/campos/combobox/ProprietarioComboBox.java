@@ -2,6 +2,7 @@ package dev.hayann.view.campos.combobox;
 
 import dev.hayann.model.Proprietario;
 import dev.hayann.repository.ProprietarioRepository;
+import dev.hayann.view.messages.GenericMessages;
 
 import javax.swing.*;
 import java.util.List;
@@ -26,6 +27,9 @@ public class ProprietarioComboBox {
         proprietarioComboBox.removeAllItems();
         proprietarioComboBoxUpdate.removeAllItems();
         ProprietarioRepository proprietarioRepository = new ProprietarioRepository();
+        Proprietario proprietarioMock = new Proprietario(GenericMessages.DEFAULT_OPTION_COMBO_BOX, 0L, 0L, 0L);
+        proprietarioComboBox.addItem(proprietarioMock);
+        proprietarioComboBoxUpdate.addItem(proprietarioMock);
         try {
             List<Proprietario> proprietarios = proprietarioRepository.findAll();
             for (Proprietario proprietario : proprietarios) {
