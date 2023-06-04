@@ -1,7 +1,7 @@
-package dev.hayann.view.propriedade;
+package dev.hayann.view.proprietario;
 
-import dev.hayann.model.Propriedade;
-import dev.hayann.repository.PropriedadeRepository;
+import dev.hayann.model.Proprietario;
+import dev.hayann.repository.ProprietarioRepository;
 import dev.hayann.view.campos.NumberTextField;
 import dev.hayann.view.dialog.ErrorDialog;
 import dev.hayann.view.dialog.WarningDialog;
@@ -13,27 +13,27 @@ import java.awt.*;
 import java.sql.SQLException;
 import java.util.Vector;
 
-public class PropriedadeWindow {
+public class ProprietarioWindow {
 
-    private PropriedadeRepository propriedadeRepository = new PropriedadeRepository();
+    private ProprietarioRepository proprietarioRepository = new ProprietarioRepository();
     private JPanel panel;
     private JTable table;
     private DefaultTableModel tableModel;
     private JTextField nameField;
-    private JTextField areaField = NumberTextField.getNumberTextField();
-    private JTextField distanciaField = NumberTextField.getNumberTextField();
-    private JTextField valorField = NumberTextField.getNumberTextField();
+    private JTextField telefone1Field = NumberTextField.getNumberTextField();
+    private JTextField telefone2Field = NumberTextField.getNumberTextField();
+    private JTextField telefone3Field = NumberTextField.getNumberTextField();
 
-    public PropriedadeWindow() {
+    public ProprietarioWindow() {
         panel = new JPanel(new BorderLayout());
 
         // Tabela
         tableModel = new DefaultTableModel();
         tableModel.addColumn("ID");
         tableModel.addColumn("Nome");
-        tableModel.addColumn("Área");
-        tableModel.addColumn("Distância do Município");
-        tableModel.addColumn("Valor da Aquisição");
+        tableModel.addColumn("Telefone 1");
+        tableModel.addColumn("Telefone 2");
+        tableModel.addColumn("Telefone 3");
         table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
         panel.add(scrollPane, BorderLayout.CENTER);
@@ -44,46 +44,52 @@ public class PropriedadeWindow {
 
         JLabel nameLabel = new JLabel("Nome:");
         nameField = new JTextField();
-        JLabel areaLabel = new JLabel("Área:");
-        JLabel distanciaLabel = new JLabel("Distância do Município:");
-        JLabel valorLabel = new JLabel("Valor da Aquisição:");
+        JLabel telefone1Label = new JLabel("Telefone 1:");
+        JLabel telefone2Label = new JLabel("Telefone 2:");
+        JLabel telefone3Label = new JLabel("Telefone 3:");
 
         JPanel namePanel = new JPanel(new GridLayout(1, 2, -10, 10));
         namePanel.add(nameLabel);
         namePanel.add(nameField);
         formPanel.add(namePanel);
 
-        JPanel areaPanel = new JPanel(new GridLayout(1, 2, -10, 10));
-        areaPanel.add(areaLabel);
-        areaPanel.add(areaField);
-        formPanel.add(areaPanel);
+        JPanel telefone1Panel = new JPanel(new GridLayout(1, 2, -10, 10));
+        telefone1Panel.add(telefone1Label);
+        telefone1Panel.add(telefone1Field);
+        formPanel.add(telefone1Panel);
 
-        JPanel distanciaPanel = new JPanel(new GridLayout(1, 2, -10, 10));
-        distanciaPanel.add(distanciaLabel);
-        distanciaPanel.add(distanciaField);
-        formPanel.add(distanciaPanel);
+        JPanel telefone2Panel = new JPanel(new GridLayout(1, 2, -10, 10));
+        telefone2Panel.add(telefone2Label);
+        telefone2Panel.add(telefone2Field);
+        formPanel.add(telefone2Panel);
 
-        JPanel valorPanel = new JPanel(new GridLayout(1, 2, -10, 10));
-        valorPanel.add(valorLabel);
-        valorPanel.add(valorField);
-        formPanel.add(valorPanel);
+        JPanel telefone3Panel = new JPanel(new GridLayout(1, 2, -10, 10));
+        telefone3Panel.add(telefone3Label);
+        telefone3Panel.add(telefone3Field);
+        formPanel.add(telefone3Panel);
 
         JButton addButton = new JButton("Adicionar");
         addButton.addActionListener(e -> {
             String name = nameField.getText();
-            String area = areaField.getText();
-            String distancia = distanciaField.getText();
-            String valor = valorField.getText();
+            String telefone1 = telefone1Field.getText();
+            String telefone2 = telefone2Field.getText();
+            String telefone3 = telefone3Field.getText();
 
-            if (name.isEmpty() || area.isEmpty() || distancia.isEmpty() || valor.isEmpty()) {
+            if (name.isEmpty() || (telefone1.isEmpty() && telefone2.isEmpty() && telefone3.isEmpty())) {
                 new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.ERROR_INCOMPLETE_FIELD);
             } else {
                 try {
-                    Propriedade propriedade = new Propriedade(name, Double.parseDouble(area), Double.parseDouble(distancia), Double.parseDouble(valor));
-                    propriedadeRepository.persist(propriedade);
-                    addRow(propriedade);
+                    Proprietario proprietario = new Proprietario(
+                            name,
+                            telefone1.isEmpty() ? 0 : Long.parseLong(telefone1),
+                            telefone2.isEmpty() ? 0 : Long.parseLong(telefone2),
+                            telefone3.isEmpty() ? 0 : Long.parseLong(telefone3)
+                    );
+                    proprietarioRepository.persist(proprietario);
+                    addRow(proprietario);
                     clearFields();
                 } catch (Exception exception) {
+                    exception.printStackTrace();
                     new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.ERROR_INSERT);
                 }
             }
@@ -96,12 +102,12 @@ public class PropriedadeWindow {
                 try {
                     Integer id = Integer.parseInt(tableModel.getValueAt(selectedRow, 0).toString());
                     String name = tableModel.getValueAt(selectedRow, 1).toString();
-                    Double area = Double.parseDouble(tableModel.getValueAt(selectedRow, 2).toString());
-                    Double distancia = Double.parseDouble(tableModel.getValueAt(selectedRow, 3).toString());
-                    Double valor = Double.parseDouble(tableModel.getValueAt(selectedRow, 4).toString());
-                    Propriedade propriedade = new Propriedade(id, name, area, distancia, valor);
-                    if (openUpdateDialog(propriedade)) {
-                        propriedadeRepository.update(propriedade);
+                    Long telefone1 = Long.parseLong(tableModel.getValueAt(selectedRow, 2).toString());
+                    Long telefone2 = Long.parseLong(tableModel.getValueAt(selectedRow, 3).toString());
+                    Long telefone3 = Long.parseLong(tableModel.getValueAt(selectedRow, 4).toString());
+                    Proprietario proprietario = new Proprietario(id, name, telefone1, telefone2, telefone3);
+                    if (openUpdateDialog(proprietario)) {
+                        proprietarioRepository.update(proprietario);
                         loadData();
                     }
                 } catch (Exception exception) {
@@ -118,7 +124,7 @@ public class PropriedadeWindow {
                     WarningDialog warningDialog = new WarningDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.WARNING_DELETE);
                     if (warningDialog.isConfirmed()) {
                         Integer id = Integer.parseInt(tableModel.getValueAt(selectedRow, 0).toString());
-                        propriedadeRepository.delete(id);
+                        proprietarioRepository.delete(id);
                         tableModel.removeRow(selectedRow);
                     }
                 } catch (SQLException ex) {
@@ -147,13 +153,13 @@ public class PropriedadeWindow {
         loadData();
     }
 
-    private void addRow(Propriedade propriedade) {
+    private void addRow(Proprietario proprietario) {
         Vector<String> row = new Vector<>();
-        row.add(propriedade.getId().toString());
-        row.add(propriedade.getName());
-        row.add(propriedade.getAreaPropriedade().toString());
-        row.add(propriedade.getDistanciaMunicipio().toString());
-        row.add(propriedade.getValorAquisicao().toString());
+        row.add(proprietario.getId().toString());
+        row.add(proprietario.getName());
+        row.add(proprietario.getTelefone1().toString());
+        row.add(proprietario.getTelefone2().toString());
+        row.add(proprietario.getTelefone3().toString());
         tableModel.addRow(row);
     }
 
@@ -167,24 +173,24 @@ public class PropriedadeWindow {
     private void loadData() {
         try {
             cleanTable();
-            java.util.List<Propriedade> propriedades = propriedadeRepository.findAll();
-            propriedades.forEach(this::addRow);
+            java.util.List<Proprietario> proprietarios = proprietarioRepository.findAll();
+            proprietarios.forEach(this::addRow);
         } catch (Exception exception) {
             new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.ERROR_SELECT);
         }
     }
 
-    private boolean openUpdateDialog(Propriedade propriedade) {
-        PropriedadeUpdate dialog = new PropriedadeUpdate((Frame) SwingUtilities.getWindowAncestor(panel), propriedade);
+    private boolean openUpdateDialog(Proprietario proprietario) {
+        ProprietarioUpdate dialog = new ProprietarioUpdate((Frame) SwingUtilities.getWindowAncestor(panel), proprietario);
         dialog.setVisible(true);
         return dialog.isUpdated();
     }
 
     private void clearFields() {
         nameField.setText("");
-        areaField.setText("");
-        distanciaField.setText("");
-        valorField.setText("");
+        telefone1Field.setText("");
+        telefone2Field.setText("");
+        telefone3Field.setText("");
     }
 
     public JPanel getPanel() {

@@ -1,8 +1,10 @@
 package dev.hayann;
 
+import dev.hayann.database.InicializadorDoBD;
 import dev.hayann.view.municipio.MunicipioWindow;
 import dev.hayann.view.produto.ProdutoWindow;
 import dev.hayann.view.propriedade.PropriedadeWindow;
+import dev.hayann.view.proprietario.ProprietarioWindow;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,6 +17,8 @@ public class MainApp extends JFrame {
     public static ProdutoWindow produtoWindow = new ProdutoWindow();
 
     public static PropriedadeWindow propriedadeWindow = new PropriedadeWindow();
+
+    public static ProprietarioWindow proprietarioWindow = new ProprietarioWindow();
 
     public MainApp() {
         // Configurações da janela
@@ -29,6 +33,7 @@ public class MainApp extends JFrame {
         tabbedPane.addTab("Município", municipioWindow.getPanel());
         tabbedPane.addTab("Produto", produtoWindow.getPanel());
         tabbedPane.addTab("Proprieade", propriedadeWindow.getPanel());
+        tabbedPane.addTab("Proprietario", proprietarioWindow.getPanel());
 
         add(tabbedPane, BorderLayout.CENTER);
 
@@ -36,6 +41,7 @@ public class MainApp extends JFrame {
     }
 
     public static void main(String[] args) {
+        InicializadorDoBD.inicializarBancoDeDados();
         SwingUtilities.invokeLater(MainApp::new);
     }
 }

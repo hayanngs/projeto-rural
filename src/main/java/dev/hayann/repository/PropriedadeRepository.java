@@ -1,8 +1,6 @@
 package dev.hayann.repository;
 
 import dev.hayann.database.ConnectionPool;
-import dev.hayann.model.Municipio;
-import dev.hayann.model.Propriedade;
 import dev.hayann.model.Propriedade;
 
 import java.sql.Connection;
