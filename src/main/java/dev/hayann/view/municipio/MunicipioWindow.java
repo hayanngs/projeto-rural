@@ -2,6 +2,7 @@ package dev.hayann.view.municipio;
 
 import dev.hayann.model.Municipio;
 import dev.hayann.repository.MunicipioRepository;
+import dev.hayann.view.campos.MunicipioComboBox;
 import dev.hayann.view.campos.UFTextField;
 import dev.hayann.view.dialog.ErrorDialog;
 import dev.hayann.view.dialog.WarningDialog;
@@ -60,7 +61,9 @@ public class MunicipioWindow {
                     municipioRepository.persist(municipio);
                     addRow(municipio);
                     clearFields();
+                    MunicipioComboBox.reloadMunicipioComboBox();
                 } catch (Exception exception) {
+                    exception.printStackTrace();
                     new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.ERROR_INSERT);
                 }
             }
@@ -78,8 +81,10 @@ public class MunicipioWindow {
                     if (openUpdateDialog(municipio)) {
                         municipioRepository.update(municipio);
                         loadData();
+                        MunicipioComboBox.reloadMunicipioComboBox();
                     }
                 } catch (Exception exception) {
+                    exception.printStackTrace();
                     new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.ERROR_UPDATE);
                 }
             }
@@ -95,8 +100,10 @@ public class MunicipioWindow {
                         Integer id = Integer.parseInt(tableModel.getValueAt(selectedRow, 0).toString());
                         municipioRepository.delete(id);
                         tableModel.removeRow(selectedRow);
+                        MunicipioComboBox.reloadMunicipioComboBox();
                     }
                 } catch (SQLException ex) {
+                    ex.printStackTrace();
                     new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.ERROR_DELETE);
                 }
             }
@@ -138,6 +145,7 @@ public class MunicipioWindow {
             java.util.List<Municipio> municipios = municipioRepository.findAll();
             municipios.forEach(this::addRow);
         } catch (Exception exception) {
+            exception.printStackTrace();
             new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.ERROR_SELECT);
         }
     }

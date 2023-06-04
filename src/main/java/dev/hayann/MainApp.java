@@ -21,13 +21,11 @@ public class MainApp extends JFrame {
     public static ProprietarioWindow proprietarioWindow = new ProprietarioWindow();
 
     public MainApp() {
-        // Configurações da janela
-        setTitle("Sistema de Cadastro");
+        setTitle("Gerenciamento Rural");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 600);
         setLayout(new BorderLayout());
 
-        // Criar o JTabbedPane
         tabbedPane = new JTabbedPane();
 
         tabbedPane.addTab("Município", municipioWindow.getPanel());

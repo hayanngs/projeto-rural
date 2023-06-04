@@ -1,7 +1,9 @@
 package dev.hayann.view.propriedade;
 
+import dev.hayann.model.Municipio;
 import dev.hayann.model.Propriedade;
 import dev.hayann.repository.PropriedadeRepository;
+import dev.hayann.view.campos.MunicipioComboBox;
 import dev.hayann.view.campos.NumberTextField;
 import dev.hayann.view.dialog.ErrorDialog;
 import dev.hayann.view.dialog.WarningDialog;
@@ -19,10 +21,11 @@ public class PropriedadeWindow {
     private JPanel panel;
     private JTable table;
     private DefaultTableModel tableModel;
-    private JTextField nameField;
+    private JTextField nameField = new JTextField();;
     private JTextField areaField = NumberTextField.getNumberTextField();
     private JTextField distanciaField = NumberTextField.getNumberTextField();
     private JTextField valorField = NumberTextField.getNumberTextField();
+    public JComboBox<Municipio> municipioComboBox = MunicipioComboBox.getMunicipioComboBox();
 
     public PropriedadeWindow() {
         panel = new JPanel(new BorderLayout());
@@ -31,6 +34,7 @@ public class PropriedadeWindow {
         tableModel = new DefaultTableModel();
         tableModel.addColumn("ID");
         tableModel.addColumn("Nome");
+        tableModel.addColumn("Município");
         tableModel.addColumn("Área");
         tableModel.addColumn("Distância do Município");
         tableModel.addColumn("Valor da Aquisição");
@@ -39,31 +43,35 @@ public class PropriedadeWindow {
         panel.add(scrollPane, BorderLayout.CENTER);
 
         // Painel de formulário
-        JPanel formPanel = new JPanel(new GridLayout(5, 1, 10, 10));
+        JPanel formPanel = new JPanel(new GridLayout(6, 1, 10, 10));
         formPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        JLabel nameLabel = new JLabel("Nome:");
-        nameField = new JTextField();
-        JLabel areaLabel = new JLabel("Área:");
-        JLabel distanciaLabel = new JLabel("Distância do Município:");
-        JLabel valorLabel = new JLabel("Valor da Aquisição:");
-
         JPanel namePanel = new JPanel(new GridLayout(1, 2, -10, 10));
+        JLabel nameLabel = new JLabel("Nome:");
         namePanel.add(nameLabel);
         namePanel.add(nameField);
         formPanel.add(namePanel);
 
+        JPanel municipioPanel = new JPanel(new GridLayout(1, 2, -10, 10));
+        JLabel municipioLabel = new JLabel("Município:");
+        municipioPanel.add(municipioLabel);
+        municipioPanel.add(municipioComboBox);
+        formPanel.add(municipioPanel);
+
         JPanel areaPanel = new JPanel(new GridLayout(1, 2, -10, 10));
+        JLabel areaLabel = new JLabel("Área:");
         areaPanel.add(areaLabel);
         areaPanel.add(areaField);
         formPanel.add(areaPanel);
 
         JPanel distanciaPanel = new JPanel(new GridLayout(1, 2, -10, 10));
+        JLabel distanciaLabel = new JLabel("Distância do Município:");
         distanciaPanel.add(distanciaLabel);
         distanciaPanel.add(distanciaField);
         formPanel.add(distanciaPanel);
 
         JPanel valorPanel = new JPanel(new GridLayout(1, 2, -10, 10));
+        JLabel valorLabel = new JLabel("Valor da Aquisição:");
         valorPanel.add(valorLabel);
         valorPanel.add(valorField);
         formPanel.add(valorPanel);
@@ -79,7 +87,7 @@ public class PropriedadeWindow {
                 new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.ERROR_INCOMPLETE_FIELD);
             } else {
                 try {
-                    Propriedade propriedade = new Propriedade(name, Double.parseDouble(area), Double.parseDouble(distancia), Double.parseDouble(valor));
+                    Propriedade propriedade = new Propriedade(name, Double.parseDouble(area), Double.parseDouble(distancia), Double.parseDouble(valor), (Municipio) municipioComboBox.getSelectedItem());
                     propriedadeRepository.persist(propriedade);
                     addRow(propriedade);
                     clearFields();
@@ -151,6 +159,7 @@ public class PropriedadeWindow {
         Vector<String> row = new Vector<>();
         row.add(propriedade.getId().toString());
         row.add(propriedade.getName());
+        row.add(propriedade.getMunicipio().getName());
         row.add(propriedade.getAreaPropriedade().toString());
         row.add(propriedade.getDistanciaMunicipio().toString());
         row.add(propriedade.getValorAquisicao().toString());
@@ -170,6 +179,7 @@ public class PropriedadeWindow {
             java.util.List<Propriedade> propriedades = propriedadeRepository.findAll();
             propriedades.forEach(this::addRow);
         } catch (Exception exception) {
+            exception.printStackTrace();
             new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.ERROR_SELECT);
         }
     }

@@ -53,10 +53,6 @@ public class Municipio implements Entity {
 
     @Override
     public String toString() {
-        return "Municipio{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", uf='" + uf + '\'' +
-                '}';
+        return name;
     }
 }

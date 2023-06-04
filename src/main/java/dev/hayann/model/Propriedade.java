@@ -6,6 +6,8 @@ public class Propriedade implements Entity {
 
     public static final String COLLUMN_ID_NAME = "id_propriedade";
 
+    public static final String COLLUMN_ID_MUNICIPIO_NAME = "id_mun";
+
     public static final String COLLUMN_NAME_NAME = "nam_propriedade";
 
     public static final String COLLUMN_AREA_PROPRIEDADE_NAME = "area_propriedade";
@@ -16,6 +18,8 @@ public class Propriedade implements Entity {
 
     private Integer id;
 
+    private Municipio municipio;
+
     private String name;
 
     private Double areaPropriedade;
@@ -23,6 +27,15 @@ public class Propriedade implements Entity {
     private Double distanciaMunicipio;
 
     private Double valorAquisicao;
+
+    public Propriedade(Integer id, String name, Double areaPropriedade, Double distanciaMunicipio, Double valorAquisicao, Municipio municipio) {
+        this.id = id;
+        this.name = name;
+        this.areaPropriedade = areaPropriedade;
+        this.distanciaMunicipio = distanciaMunicipio;
+        this.valorAquisicao = valorAquisicao;
+        this.municipio = municipio;
+    }
 
     public Propriedade(Integer id, String name, Double areaPropriedade, Double distanciaMunicipio, Double valorAquisicao) {
         this.id = id;
@@ -32,11 +45,12 @@ public class Propriedade implements Entity {
         this.valorAquisicao = valorAquisicao;
     }
 
-    public Propriedade(String name, Double areaPropriedade, Double distanciaMunicipio, Double valorAquisicao) {
+    public Propriedade(String name, Double areaPropriedade, Double distanciaMunicipio, Double valorAquisicao, Municipio municipio) {
         this.name = name;
         this.areaPropriedade = areaPropriedade;
         this.distanciaMunicipio = distanciaMunicipio;
         this.valorAquisicao = valorAquisicao;
+        this.municipio = municipio;
     }
 
     public Integer getId() {
@@ -45,6 +59,14 @@ public class Propriedade implements Entity {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Municipio getMunicipio() {
+        return municipio;
+    }
+
+    public void setMunicipio(Municipio municipio) {
+        this.municipio = municipio;
     }
 
     public String getName() {

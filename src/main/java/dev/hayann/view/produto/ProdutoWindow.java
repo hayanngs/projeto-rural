@@ -129,6 +129,7 @@ public class ProdutoWindow {
             java.util.List<Produto> produtos = produtoRepository.findAll();
             produtos.forEach(this::addRow);
         } catch (Exception exception) {
+            exception.printStackTrace();
             new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.ERROR_SELECT);
         }
     }

@@ -176,6 +176,7 @@ public class ProprietarioWindow {
             java.util.List<Proprietario> proprietarios = proprietarioRepository.findAll();
             proprietarios.forEach(this::addRow);
         } catch (Exception exception) {
+            exception.printStackTrace();
             new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.ERROR_SELECT);
         }
     }
