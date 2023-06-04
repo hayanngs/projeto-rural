@@ -2,6 +2,7 @@ package dev.hayann.view.produto;
 
 import dev.hayann.model.Produto;
 import dev.hayann.repository.ProdutoRepository;
+import dev.hayann.view.campos.combobox.ProdutoComboBox;
 import dev.hayann.view.dialog.ErrorDialog;
 import dev.hayann.view.dialog.WarningDialog;
 import dev.hayann.view.messages.GenericMessages;
@@ -53,6 +54,7 @@ public class ProdutoWindow {
                     produtoRepository.persist(produto);
                     addRow(produto);
                     clearFields();
+                    ProdutoComboBox.reloadProdutoComboBox();
                 } catch (Exception exception) {
                     new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.ERROR_INSERT);
                 }
@@ -70,6 +72,7 @@ public class ProdutoWindow {
                     if (openUpdateDialog(produto)) {
                         produtoRepository.update(produto);
                         loadData();
+                        ProdutoComboBox.reloadProdutoComboBox();
                     }
                 } catch (Exception exception) {
                     new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.ERROR_UPDATE);
@@ -87,6 +90,7 @@ public class ProdutoWindow {
                         Integer id = Integer.parseInt(tableModel.getValueAt(selectedRow, 0).toString());
                         produtoRepository.delete(id);
                         tableModel.removeRow(selectedRow);
+                        ProdutoComboBox.reloadProdutoComboBox();
                     }
                 } catch (SQLException ex) {
                     new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.ERROR_DELETE);

@@ -2,6 +2,7 @@ package dev.hayann.view.proprietario;
 
 import dev.hayann.model.Proprietario;
 import dev.hayann.repository.ProprietarioRepository;
+import dev.hayann.view.campos.combobox.ProprietarioComboBox;
 import dev.hayann.view.campos.textfield.NumberTextField;
 import dev.hayann.view.dialog.ErrorDialog;
 import dev.hayann.view.dialog.WarningDialog;
@@ -88,6 +89,7 @@ public class ProprietarioWindow {
                     proprietarioRepository.persist(proprietario);
                     addRow(proprietario);
                     clearFields();
+                    ProprietarioComboBox.reloadProprietarioComboBox();
                 } catch (Exception exception) {
                     exception.printStackTrace();
                     new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.ERROR_INSERT);
@@ -109,6 +111,7 @@ public class ProprietarioWindow {
                     if (openUpdateDialog(proprietario)) {
                         proprietarioRepository.update(proprietario);
                         loadData();
+                        ProprietarioComboBox.reloadProprietarioComboBox();
                     }
                 } catch (Exception exception) {
                     new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.ERROR_UPDATE);
@@ -126,6 +129,7 @@ public class ProprietarioWindow {
                         Integer id = Integer.parseInt(tableModel.getValueAt(selectedRow, 0).toString());
                         proprietarioRepository.delete(id);
                         tableModel.removeRow(selectedRow);
+                        ProprietarioComboBox.reloadProprietarioComboBox();
                     }
                 } catch (SQLException ex) {
                     new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.ERROR_DELETE);

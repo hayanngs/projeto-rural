@@ -2,6 +2,7 @@ package dev.hayann;
 
 import dev.hayann.database.InicializadorDoBD;
 import dev.hayann.view.municipio.MunicipioWindow;
+import dev.hayann.view.pessoafisica.PessoaFisicaWindow;
 import dev.hayann.view.producao.ProducaoWindow;
 import dev.hayann.view.produto.ProdutoWindow;
 import dev.hayann.view.propriedade.PropriedadeWindow;
@@ -23,6 +24,8 @@ public class MainApp extends JFrame {
 
     public static ProducaoWindow producaoWindow = new ProducaoWindow();
 
+    public static PessoaFisicaWindow pessoaFisicaWindow = new PessoaFisicaWindow();
+
     public MainApp() {
         setTitle("Gerenciamento Rural");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -36,6 +39,7 @@ public class MainApp extends JFrame {
         tabbedPane.addTab("Proprieade", propriedadeWindow.getPanel());
         tabbedPane.addTab("Proprietario", proprietarioWindow.getPanel());
         tabbedPane.addTab("Produção", producaoWindow.getPanel());
+        tabbedPane.addTab("Pessoa Física", pessoaFisicaWindow.getPanel());
 
         add(tabbedPane, BorderLayout.CENTER);
 

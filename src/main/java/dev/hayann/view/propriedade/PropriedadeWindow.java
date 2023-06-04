@@ -5,6 +5,7 @@ import dev.hayann.model.Propriedade;
 import dev.hayann.repository.MunicipioRepository;
 import dev.hayann.repository.PropriedadeRepository;
 import dev.hayann.view.campos.combobox.MunicipioComboBox;
+import dev.hayann.view.campos.combobox.PropriedadeComboBox;
 import dev.hayann.view.campos.textfield.NumberTextField;
 import dev.hayann.view.dialog.ErrorDialog;
 import dev.hayann.view.dialog.WarningDialog;
@@ -94,6 +95,7 @@ public class PropriedadeWindow {
                     propriedadeRepository.persist(propriedade);
                     addRow(propriedade);
                     clearFields();
+                    PropriedadeComboBox.reloadPropriedadeComboBox();
                 } catch (Exception exception) {
                     exception.printStackTrace();
                     new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.ERROR_INSERT);
@@ -116,6 +118,7 @@ public class PropriedadeWindow {
                     if (openUpdateDialog(propriedade)) {
                         propriedadeRepository.update(propriedade);
                         loadData();
+                        PropriedadeComboBox.reloadPropriedadeComboBox();
                     }
                 } catch (Exception exception) {
                     exception.printStackTrace();
@@ -134,6 +137,7 @@ public class PropriedadeWindow {
                         Integer id = Integer.parseInt(tableModel.getValueAt(selectedRow, 0).toString());
                         propriedadeRepository.delete(id);
                         tableModel.removeRow(selectedRow);
+                        PropriedadeComboBox.reloadPropriedadeComboBox();
                     }
                 } catch (SQLException ex) {
                     ex.printStackTrace();

@@ -81,9 +81,6 @@ public class Proprietario implements Entity {
 
     @Override
     public String toString() {
-        return "Proprietario{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
+        return name;
     }
 }
