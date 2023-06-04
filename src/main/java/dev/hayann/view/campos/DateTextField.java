@@ -20,7 +20,7 @@ public class DateTextField {
         AbstractDocument document = (AbstractDocument) formattedTextField.getDocument();
         document.setDocumentFilter(new DocumentFilter() {
             private boolean isNumber(String text) {
-                return text.matches("\\d*");
+                return text.matches("\\d+\\/\\d+\\/\\d+");
             }
 
             @Override

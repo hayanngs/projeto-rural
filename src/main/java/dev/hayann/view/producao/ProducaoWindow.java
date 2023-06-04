@@ -25,7 +25,6 @@ import java.util.Vector;
 public class ProducaoWindow {
 
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    DateTimeFormatter formatterFromTable = DateTimeFormatter.ofPattern("yyyy-dd-MM");
     private ProducaoRepository producaoRepository = new ProducaoRepository();
     private PropriedadeRepository propriedadeRepository = new PropriedadeRepository();
     private ProdutoRepository produtoRepository = new ProdutoRepository();
@@ -153,11 +152,11 @@ public class ProducaoWindow {
                     Integer id = Integer.parseInt(tableModel.getValueAt(selectedRow, 0).toString());
                     Propriedade propriedade = propriedadeRepository.findByName(tableModel.getValueAt(selectedRow, 1).toString());
                     Produto produto = produtoRepository.findByDescricao(tableModel.getValueAt(selectedRow, 2).toString());
-                    LocalDate dataInicioProv = LocalDate.parse(tableModel.getValueAt(selectedRow, 3).toString(), formatterFromTable);
-                    LocalDate dataFimProv = LocalDate.parse(tableModel.getValueAt(selectedRow, 4).toString(), formatterFromTable);
+                    LocalDate dataInicioProv = LocalDate.parse(tableModel.getValueAt(selectedRow, 3).toString(), formatter);
+                    LocalDate dataFimProv = LocalDate.parse(tableModel.getValueAt(selectedRow, 4).toString(), formatter);
                     Double colheitaProv = Double.parseDouble(tableModel.getValueAt(selectedRow, 5).toString());
-                    LocalDate dataInicioReal = LocalDate.parse(tableModel.getValueAt(selectedRow, 6).toString(), formatterFromTable);
-                    LocalDate dataFimReal = LocalDate.parse(tableModel.getValueAt(selectedRow, 7).toString(), formatterFromTable);
+                    LocalDate dataInicioReal = LocalDate.parse(tableModel.getValueAt(selectedRow, 6).toString(), formatter);
+                    LocalDate dataFimReal = LocalDate.parse(tableModel.getValueAt(selectedRow, 7).toString(), formatter);
                     Double colheitaReal = Double.parseDouble(tableModel.getValueAt(selectedRow, 8).toString());
                     Producao producao = new Producao(
                             id,
@@ -224,11 +223,11 @@ public class ProducaoWindow {
         row.add(producao.getId().toString());
         row.add(producao.getPropriedade().toString());
         row.add(producao.getProduto().toString());
-        row.add(producao.getDataInicioColheitaProv().toString());
-        row.add(producao.getDataFimColheitaProv().toString());
+        row.add(producao.getDataInicioColheitaProv().format(formatter));
+        row.add(producao.getDataFimColheitaProv().format(formatter));
         row.add(producao.getQtdProvColhida().toString());
-        row.add(producao.getDataInicioColheitaReal().toString());
-        row.add(producao.getDataFimColheitaReal().toString());
+        row.add(producao.getDataInicioColheitaReal().format(formatter));
+        row.add(producao.getDataFimColheitaReal().format(formatter));
         row.add(producao.getQtdRealColhida().toString());
         tableModel.addRow(row);
     }

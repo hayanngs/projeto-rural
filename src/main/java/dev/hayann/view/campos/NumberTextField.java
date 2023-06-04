@@ -7,20 +7,11 @@ public class NumberTextField {
 
     public static JFormattedTextField getNumberTextField() {
 
-//        MaskFormatter maskFormatter;
-//        try {
-//            maskFormatter = new MaskFormatter("###,###.##");
-//            maskFormatter.setPlaceholderCharacter('_');
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-
         JFormattedTextField formattedTextField = new JFormattedTextField();
         AbstractDocument document = (AbstractDocument) formattedTextField.getDocument();
         document.setDocumentFilter(new DocumentFilter() {
             private boolean isNumber(String text) {
-                return text.matches("\\d*");
+                return text.matches("\\d+\\.?\\d*?");
             }
 
             @Override

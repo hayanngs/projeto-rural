@@ -16,7 +16,6 @@ import java.time.format.DateTimeFormatter;
 public class ProducaoUpdate extends JDialog {
 
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    DateTimeFormatter formatterFromTable = DateTimeFormatter.ofPattern("yyyy-dd-MM");
     private JTextField txtId;
     private JComboBox propriedadeComboBox = PropriedadeComboBox.getPropriedadeComboBoxUpdate();
     private JComboBox produtoComboBox = ProdutoComboBox.getProdutoComboBoxUpdate();
@@ -58,11 +57,11 @@ public class ProducaoUpdate extends JDialog {
 
         produtoComboBox.setBorder(BorderFactory.createEtchedBorder());
 
-        dataInicioProvField.setText(producao.getDataInicioColheitaProv().toString());
+        dataInicioProvField.setText(producao.getDataInicioColheitaProv().format(formatter));
         dataInicioProvField.setBackground(Color.WHITE);
         dataInicioProvField.setBorder(BorderFactory.createEtchedBorder());
 
-        dataFimProvField.setText(producao.getDataFimColheitaProv().toString());
+        dataFimProvField.setText(producao.getDataFimColheitaProv().format(formatter));
         dataFimProvField.setBackground(Color.WHITE);
         dataFimProvField.setBorder(BorderFactory.createEtchedBorder());
 
@@ -74,7 +73,7 @@ public class ProducaoUpdate extends JDialog {
         dataInicioRealField.setBackground(Color.WHITE);
         dataInicioRealField.setBorder(BorderFactory.createEtchedBorder());
 
-        dataFimRealField.setText(producao.getDataFimColheitaReal().toString());
+        dataFimRealField.setText(producao.getDataFimColheitaReal().format(formatter));
         dataFimRealField.setBackground(Color.WHITE);
         dataFimRealField.setBorder(BorderFactory.createEtchedBorder());
 
@@ -105,11 +104,11 @@ public class ProducaoUpdate extends JDialog {
         btnSalvar.addActionListener(e -> {
             producao.setPropriedade((Propriedade) propriedadeComboBox.getSelectedItem());
             producao.setProduto((Produto) produtoComboBox.getSelectedItem());
-            producao.setDataInicioColheitaProv(LocalDate.parse(dataInicioProvField.getText()));
-            producao.setDataFimColheitaProv(LocalDate.parse(dataFimProvField.getText()));
+            producao.setDataInicioColheitaProv(LocalDate.parse(dataInicioProvField.getText(), formatter));
+            producao.setDataFimColheitaProv(LocalDate.parse(dataFimProvField.getText(), formatter));
             producao.setQtdProvColhida(Double.parseDouble(colheitaProvField.getText()));
-            producao.setDataInicioColheitaReal(LocalDate.parse(dataInicioRealField.getText()));
-            producao.setDataFimColheitaReal(LocalDate.parse(dataFimRealField.getText()));
+            producao.setDataInicioColheitaReal(LocalDate.parse(dataInicioRealField.getText(), formatter));
+            producao.setDataFimColheitaReal(LocalDate.parse(dataFimRealField.getText(),formatter));
             producao.setQtdRealColhida(Double.parseDouble(colheitaRealField.getText()));
             salvo = true;
             dispose();

@@ -142,15 +142,16 @@ public class ProducaoRepository implements Repository<Producao> {
     }
 
     public void update(Producao producao) throws SQLException {
-        String sql = String.format("UPDATE %s SET %s = ?, %s = ?, %s = ?, %s = ?, %s = ?, %s = ? WHERE %s = ? AND %s = ?", Producao.TABLE_NAME,
-                Producao.COLLUMN_ID_PROPRIEDADE_NAME,
-                Producao.COLLUMN_ID_PRODUTO_NAME,
+        String sql = String.format("UPDATE %s SET %s = ?, %s = ?, %s = ?, %s = ?, %s = ?, %s = ?, %s = ?, %s = ? WHERE %s = ? ", Producao.TABLE_NAME,
                 Producao.COLLUMN_DATA_INICIO_PROV_COLHEITA_NAME,
                 Producao.COLLUMN_DATA_FIM_PROV_COLHEITA_NAME,
                 Producao.COLLUMN_QTD_PROV_COLHIDA_NAME,
                 Producao.COLLUMN_DATA_INICIO_REAL_COLHEITA_NAME,
                 Producao.COLLUMN_DATA_FIM_REAL_COLHEITA_NAME,
-                Producao.COLLUMN_QTD_REAL_COLHIDA_NAME
+                Producao.COLLUMN_QTD_REAL_COLHIDA_NAME,
+                Producao.COLLUMN_ID_PROPRIEDADE_NAME,
+                Producao.COLLUMN_ID_PRODUTO_NAME,
+                Producao.COLLUMN_ID_NAME
         );
         ConnectionPool connectionPool = ConnectionPool.getInstance();
         Connection connection = connectionPool.getConnection();
@@ -163,6 +164,7 @@ public class ProducaoRepository implements Repository<Producao> {
         stmt.setDouble(6, producao.getQtdRealColhida());
         stmt.setInt(7, producao.getPropriedade().getId());
         stmt.setInt(8, producao.getProduto().getId());
+        stmt.setInt(9, producao.getId());
         stmt.executeUpdate();
         connectionPool.releaseConnection(connection);
     }
