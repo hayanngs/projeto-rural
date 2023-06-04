@@ -1,4 +1,4 @@
-package dev.hayann.view.campos;
+package dev.hayann.view.campos.combobox;
 
 import dev.hayann.model.Propriedade;
 import dev.hayann.repository.PropriedadeRepository;

@@ -3,10 +3,10 @@ package dev.hayann.view.producao;
 import dev.hayann.model.Producao;
 import dev.hayann.model.Produto;
 import dev.hayann.model.Propriedade;
-import dev.hayann.view.campos.DateTextField;
-import dev.hayann.view.campos.NumberTextField;
-import dev.hayann.view.campos.ProdutoComboBox;
-import dev.hayann.view.campos.PropriedadeComboBox;
+import dev.hayann.view.campos.textfield.DateTextField;
+import dev.hayann.view.campos.textfield.NumberTextField;
+import dev.hayann.view.campos.combobox.ProdutoComboBox;
+import dev.hayann.view.campos.combobox.PropriedadeComboBox;
 
 import javax.swing.*;
 import java.awt.*;

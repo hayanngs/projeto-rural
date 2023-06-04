@@ -1,7 +1,7 @@
 package dev.hayann.view.propriedade;
 
 import dev.hayann.model.Propriedade;
-import dev.hayann.view.campos.NumberTextField;
+import dev.hayann.view.campos.textfield.NumberTextField;
 
 import javax.swing.*;
 import java.awt.*;

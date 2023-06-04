@@ -1,4 +1,4 @@
-package dev.hayann.view.campos;
+package dev.hayann.view.campos.combobox;
 
 import dev.hayann.model.Produto;
 import dev.hayann.repository.ProdutoRepository;

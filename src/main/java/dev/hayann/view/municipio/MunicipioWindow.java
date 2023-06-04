@@ -2,8 +2,8 @@ package dev.hayann.view.municipio;
 
 import dev.hayann.model.Municipio;
 import dev.hayann.repository.MunicipioRepository;
-import dev.hayann.view.campos.MunicipioComboBox;
-import dev.hayann.view.campos.UFTextField;
+import dev.hayann.view.campos.combobox.MunicipioComboBox;
+import dev.hayann.view.campos.textfield.UFTextField;
 import dev.hayann.view.dialog.ErrorDialog;
 import dev.hayann.view.dialog.WarningDialog;
 import dev.hayann.view.messages.GenericMessages;

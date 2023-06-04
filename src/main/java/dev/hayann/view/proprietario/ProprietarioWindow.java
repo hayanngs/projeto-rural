@@ -2,7 +2,7 @@ package dev.hayann.view.proprietario;
 
 import dev.hayann.model.Proprietario;
 import dev.hayann.repository.ProprietarioRepository;
-import dev.hayann.view.campos.NumberTextField;
+import dev.hayann.view.campos.textfield.NumberTextField;
 import dev.hayann.view.dialog.ErrorDialog;
 import dev.hayann.view.dialog.WarningDialog;
 import dev.hayann.view.messages.GenericMessages;
