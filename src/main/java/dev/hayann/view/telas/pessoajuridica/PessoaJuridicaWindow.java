@@ -1,10 +1,9 @@
-package dev.hayann.view.pessoafisica;
+package dev.hayann.view.telas.pessoajuridica;
 
-import dev.hayann.model.PessoaFisica;
+import dev.hayann.model.PessoaJuridica;
 import dev.hayann.model.Proprietario;
-import dev.hayann.repository.PessoaFisicaRepository;
+import dev.hayann.repository.PessoaJuridicaRepository;
 import dev.hayann.repository.ProdutoRepository;
-import dev.hayann.view.campos.combobox.PessoaFisicaComboBox;
 import dev.hayann.view.campos.combobox.ProprietarioComboBox;
 import dev.hayann.view.campos.textfield.DateTextField;
 import dev.hayann.view.campos.textfield.NumberTextField;
@@ -21,76 +20,60 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.Vector;
 
-public class PessoaFisicaWindow {
+public class PessoaJuridicaWindow {
 
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    private PessoaFisicaRepository pessoaFisicaRepository = new PessoaFisicaRepository();
+    private PessoaJuridicaRepository pessoaJuridicaRepository = new PessoaJuridicaRepository();
     private ProdutoRepository produtoRepository = new ProdutoRepository();
     private JPanel panel;
     private JTable table;
     private DefaultTableModel tableModel;
-    private JComboBox proprietarioComboBox = ProprietarioComboBox.getProprietarioComboBox();
-    private JTextField nameField = new JTextField();
-    private JTextField CPFField = NumberTextField.getNumberTextField();
-    private JTextField RGField = NumberTextField.getNumberTextField();
-    private JTextField nascimentoField = DateTextField.getDateTextField();
-    private JComboBox conjugeComboBox = PessoaFisicaComboBox.getPessoaFisicaComboBox();
+    private JComboBox proprietarioComboBox = ProprietarioComboBox.getProprietarioComboBoxPessoaJuridica();
+    private JTextField CNPJField = NumberTextField.getNumberTextField();
+    private JTextField razaoSocialField = new JTextField();
+    private JTextField dataCriacaoField = DateTextField.getDateTextField();
 
-    public PessoaFisicaWindow() {
+    public PessoaJuridicaWindow() {
         panel = new JPanel(new BorderLayout());
 
         // Tabela
         tableModel = new DefaultTableModel();
         tableModel.addColumn("ID Proprietário");
-        tableModel.addColumn("Nome");
-        tableModel.addColumn("CPF");
-        tableModel.addColumn("RG");
-        tableModel.addColumn("Nascimento");
-        tableModel.addColumn("Cônjuge");
+        tableModel.addColumn("Razão Social");
+        tableModel.addColumn("CNPJ");
+        tableModel.addColumn("Data de Criação");
         table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
         panel.add(scrollPane, BorderLayout.CENTER);
 
         // Painel de formulário
-        JPanel formPanel = new JPanel(new GridLayout(7, 1, 10, 10));
+        JPanel formPanel = new JPanel(new GridLayout(5, 1, 10, 10));
         formPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JLabel proprietarioLabel = new JLabel("Proprietário:");
-        JLabel nameLabel = new JLabel("Nome:");
-        JLabel CPFLabel = new JLabel("CPF:");
-        JLabel RGLabel = new JLabel("RG:");
-        JLabel nascimentoLabel = new JLabel("Nascimento");
-        JLabel conjugeLabel = new JLabel("Cônjuge:");
+        JLabel razaoSocialLabel = new JLabel("Razão Social:");
+        JLabel CNPJLabel = new JLabel("CNPJ:");
+        JLabel dataCriacaoLabel = new JLabel("Data de Criação:");
 
         JPanel proprietarioPanel = new JPanel(new GridLayout(1, 2, -10, 10));
         proprietarioPanel.add(proprietarioLabel);
         proprietarioPanel.add(proprietarioComboBox);
         formPanel.add(proprietarioPanel);
 
-        JPanel namePanel = new JPanel(new GridLayout(1, 2, -10, 10));
-        namePanel.add(nameLabel);
-        namePanel.add(nameField);
-        formPanel.add(namePanel);
+        JPanel razaoSocialPanel = new JPanel(new GridLayout(1, 2, -10, 10));
+        razaoSocialPanel.add(razaoSocialLabel);
+        razaoSocialPanel.add(razaoSocialField);
+        formPanel.add(razaoSocialPanel);
 
-        JPanel CPFPanel = new JPanel(new GridLayout(1, 2, -10, 10));
-        CPFPanel.add(CPFLabel);
-        CPFPanel.add(CPFField);
-        formPanel.add(CPFPanel);
+        JPanel CNPJPanel = new JPanel(new GridLayout(1, 2, -10, 10));
+        CNPJPanel.add(CNPJLabel);
+        CNPJPanel.add(CNPJField);
+        formPanel.add(CNPJPanel);
 
-        JPanel RGPanel = new JPanel(new GridLayout(1, 2, -10, 10));
-        RGPanel.add(RGLabel);
-        RGPanel.add(RGField);
-        formPanel.add(RGPanel);
-
-        JPanel nascimentoPanel = new JPanel(new GridLayout(1, 2, -10, 10));
-        nascimentoPanel.add(nascimentoLabel);
-        nascimentoPanel.add(nascimentoField);
-        formPanel.add(nascimentoPanel);
-
-        JPanel conjugePanel = new JPanel(new GridLayout(1, 2, -10, 10));
-        conjugePanel.add(conjugeLabel);
-        conjugePanel.add(conjugeComboBox);
-        formPanel.add(conjugePanel);
+        JPanel dataCriacaoPanel = new JPanel(new GridLayout(1, 2, -10, 10));
+        dataCriacaoPanel.add(dataCriacaoLabel);
+        dataCriacaoPanel.add(dataCriacaoField);
+        formPanel.add(dataCriacaoPanel);
 
         JButton addButton = new JButton("Adicionar");
         addButton.addActionListener(e -> {
@@ -98,28 +81,23 @@ public class PessoaFisicaWindow {
                 new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.PROPRIETARIO_EMPTY_COMBO_BOX_ERROR);
             } else {
                 String idProprietario = ((Proprietario) Objects.requireNonNull(proprietarioComboBox.getSelectedItem())).getId().toString();
-                String name = nameField.getText();
-                String CPF = CPFField.getText();
-                String RG = RGField.getText();
-                String nascimento = nascimentoField.getText();
+                String razaoSocial = razaoSocialField.getText();
+                String CNPJ = CNPJField.getText();
+                String dataCriacao = dataCriacaoField.getText();
 
-                if (idProprietario.isEmpty() || name.isEmpty() || CPF.isEmpty() || RG.isEmpty() || nascimento.isEmpty()) {
+                if (idProprietario.isEmpty() || razaoSocial.isEmpty() || CNPJ.isEmpty() || dataCriacao.isEmpty()) {
                     new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.ERROR_INCOMPLETE_FIELD);
                 } else {
                     try {
-                        Integer idConjuge = conjugeComboBox.getSelectedItem() == null || conjugeComboBox.getSelectedIndex() == 0 ? null : ((PessoaFisica) (conjugeComboBox.getSelectedItem())).getIdProprietarioPessoaFisica();
-                        PessoaFisica pessoaFisica = new PessoaFisica(
+                        PessoaJuridica pessoaJuridica = new PessoaJuridica(
                                 Integer.parseInt(idProprietario),
-                                Integer.parseInt(CPF),
-                                Integer.parseInt(RG),
-                                name,
-                                LocalDate.parse(nascimento, formatter),
-                                idConjuge
+                                Integer.parseInt(CNPJ),
+                                razaoSocial,
+                                LocalDate.parse(dataCriacao, formatter)
                         );
-                        pessoaFisicaRepository.persist(pessoaFisica);
-                        addRow(pessoaFisica);
+                        pessoaJuridicaRepository.persist(pessoaJuridica);
+                        addRow(pessoaJuridica);
                         clearFields();
-                        PessoaFisicaComboBox.reloadPessoaFisicaComboBox();
                     } catch (Exception exception) {
                         exception.printStackTrace();
                         new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.ERROR_INSERT);
@@ -134,24 +112,18 @@ public class PessoaFisicaWindow {
             if (selectedRow != -1) {
                 try {
                     String idProprietario = tableModel.getValueAt(selectedRow, 0).toString();
-                    String name = tableModel.getValueAt(selectedRow, 1).toString();
-                    String CPF = tableModel.getValueAt(selectedRow, 2).toString();
-                    String RG = tableModel.getValueAt(selectedRow, 3).toString();
-                    String nascimento = tableModel.getValueAt(selectedRow, 4).toString();
-                    PessoaFisica conjuge = pessoaFisicaRepository.findByName(tableModel.getValueAt(selectedRow, 5).toString());
-                    Integer idConjuge = conjuge == null ? null : conjuge.getIdProprietarioPessoaFisica();
-                    PessoaFisica pessoaFisica = new PessoaFisica(
+                    String razaoSocial = tableModel.getValueAt(selectedRow, 1).toString();
+                    String CNPJ = tableModel.getValueAt(selectedRow, 2).toString();
+                    String dataCriacao = tableModel.getValueAt(selectedRow, 3).toString();
+                    PessoaJuridica pessoaJuridica = new PessoaJuridica(
                             Integer.parseInt(idProprietario),
-                            Integer.parseInt(CPF),
-                            Integer.parseInt(RG),
-                            name,
-                            LocalDate.parse(nascimento, formatter),
-                            idConjuge
+                            Integer.parseInt(CNPJ),
+                            razaoSocial,
+                            LocalDate.parse(dataCriacao, formatter)
                     );
-                    if (openUpdateDialog(pessoaFisica)) {
-                        pessoaFisicaRepository.update(pessoaFisica);
+                    if (openUpdateDialog(pessoaJuridica)) {
+                        pessoaJuridicaRepository.update(pessoaJuridica);
                         loadData();
-                        PessoaFisicaComboBox.reloadPessoaFisicaComboBox();
                     }
                 } catch (Exception exception) {
                     exception.printStackTrace();
@@ -168,9 +140,8 @@ public class PessoaFisicaWindow {
                     WarningDialog warningDialog = new WarningDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.WARNING_DELETE);
                     if (warningDialog.isConfirmed()) {
                         Integer id = Integer.parseInt(tableModel.getValueAt(selectedRow, 0).toString());
-                        pessoaFisicaRepository.delete(id);
+                        pessoaJuridicaRepository.delete(id);
                         tableModel.removeRow(selectedRow);
-                        PessoaFisicaComboBox.reloadPessoaFisicaComboBox();
                     }
                 } catch (SQLException ex) {
                     ex.printStackTrace();
@@ -199,15 +170,12 @@ public class PessoaFisicaWindow {
         loadData();
     }
 
-    private void addRow(PessoaFisica pessoaFisica) {
+    private void addRow(PessoaJuridica pessoaJuridica) {
         Vector<String> row = new Vector<>();
-        row.add(pessoaFisica.getIdProprietarioPessoaFisica().toString());
-        row.add(pessoaFisica.getName());
-        row.add(pessoaFisica.getCpf().toString());
-        row.add(pessoaFisica.getRg().toString());
-        row.add(pessoaFisica.getDataNascimento().format(formatter));
-        if (pessoaFisica.getIdConjuge() != null)
-            row.add(pessoaFisica.getIdConjuge().toString());
+        row.add(pessoaJuridica.getId().toString());
+        row.add(pessoaJuridica.getRazaoSocial());
+        row.add(pessoaJuridica.getCnpj().toString());
+        row.add(pessoaJuridica.getDateCreation().format(formatter));
         tableModel.addRow(row);
     }
 
@@ -221,24 +189,24 @@ public class PessoaFisicaWindow {
     private void loadData() {
         try {
             cleanTable();
-            java.util.List<PessoaFisica> producoes = pessoaFisicaRepository.findAll();
+            java.util.List<PessoaJuridica> producoes = pessoaJuridicaRepository.findAll();
             producoes.forEach(this::addRow);
         } catch (Exception exception) {
+            exception.printStackTrace();
             new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.ERROR_SELECT);
         }
     }
 
-    private boolean openUpdateDialog(PessoaFisica pessoaFisica) {
-        PessoaFisicaUpdate dialog = new PessoaFisicaUpdate((Frame) SwingUtilities.getWindowAncestor(panel), pessoaFisica);
+    private boolean openUpdateDialog(PessoaJuridica pessoaJuridica) {
+        PessoaJuridicaUpdate dialog = new PessoaJuridicaUpdate((Frame) SwingUtilities.getWindowAncestor(panel), pessoaJuridica);
         dialog.setVisible(true);
         return dialog.isUpdated();
     }
 
     private void clearFields() {
-        nameField.setText("");
-        CPFField.setText("");
-        RGField.setText("");
-        nascimentoField.setText("");
+        CNPJField.setText("");
+        razaoSocialField.setText("");
+        dataCriacaoField.setText("");
     }
 
     public JPanel getPanel() {

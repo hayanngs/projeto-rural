@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class PessoaJuridica {
 
-    public static final String TABLE_NAME = "pessoa_fisica";
+    public static final String TABLE_NAME = "pessoa_juridica";
 
     public static final String COLLUMN_ID_PROPRIETARIO_NAME = "id_proprietario_pj";
 

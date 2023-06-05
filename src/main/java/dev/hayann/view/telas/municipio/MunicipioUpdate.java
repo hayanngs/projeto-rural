@@ -1,4 +1,4 @@
-package dev.hayann.view.municipio;
+package dev.hayann.view.telas.municipio;
 
 import dev.hayann.model.Municipio;
 

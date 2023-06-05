@@ -1,9 +1,8 @@
-package dev.hayann.view.municipio;
+package dev.hayann.view.telas.produto;
 
-import dev.hayann.model.Municipio;
-import dev.hayann.repository.MunicipioRepository;
-import dev.hayann.view.campos.combobox.MunicipioComboBox;
-import dev.hayann.view.campos.textfield.UFTextField;
+import dev.hayann.model.Produto;
+import dev.hayann.repository.ProdutoRepository;
+import dev.hayann.view.campos.combobox.ProdutoComboBox;
 import dev.hayann.view.dialog.ErrorDialog;
 import dev.hayann.view.dialog.WarningDialog;
 import dev.hayann.view.messages.GenericMessages;
@@ -14,56 +13,49 @@ import java.awt.*;
 import java.sql.SQLException;
 import java.util.Vector;
 
-public class MunicipioWindow {
+public class ProdutoWindow {
 
-    private MunicipioRepository municipioRepository = new MunicipioRepository();
+    private ProdutoRepository produtoRepository = new ProdutoRepository();
     private JPanel panel;
     private JTable table;
     private DefaultTableModel tableModel;
-    private JTextField nameField;
-    private JTextField ufField = UFTextField.getUFTextField();
+    private JTextField descriptionField;
 
-    public MunicipioWindow() {
+    public ProdutoWindow() {
         panel = new JPanel(new BorderLayout());
 
         // Tabela
         tableModel = new DefaultTableModel();
         tableModel.addColumn("ID");
-        tableModel.addColumn("Nome");
-        tableModel.addColumn("UF");
+        tableModel.addColumn("Descrição");
         table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
         panel.add(scrollPane, BorderLayout.CENTER);
 
         // Painel de formulário
-        JPanel formPanel = new JPanel(new GridLayout(5, 2, 10, 10));
+        JPanel formPanel = new JPanel(new GridLayout(3, 2, 10, 10));
         formPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        JLabel nameLabel = new JLabel("Nome:");
-        nameField = new JTextField();
-        JLabel ufLabel = new JLabel("UF:");
+        JLabel descriptionLabel = new JLabel("Descrição:");
+        descriptionField = new JTextField();
 
-        formPanel.add(nameLabel);
-        formPanel.add(nameField);
-        formPanel.add(ufLabel);
-        formPanel.add(ufField);
+        formPanel.add(descriptionLabel);
+        formPanel.add(descriptionField);
 
         JButton addButton = new JButton("Adicionar");
         addButton.addActionListener(e -> {
-            String name = nameField.getText();
-            String uf = ufField.getText();
+            String description = descriptionField.getText();
 
-            if (name.isEmpty() || uf.isEmpty()) {
+            if (description.isEmpty()) {
                 new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.ERROR_INCOMPLETE_FIELD);
             } else {
                 try {
-                    Municipio municipio = new Municipio(name, uf);
-                    municipioRepository.persist(municipio);
-                    addRow(municipio);
+                    Produto produto = new Produto(description);
+                    produtoRepository.persist(produto);
+                    addRow(produto);
                     clearFields();
-                    MunicipioComboBox.reloadMunicipioComboBox();
+                    ProdutoComboBox.reloadProdutoComboBox();
                 } catch (Exception exception) {
-                    exception.printStackTrace();
                     new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.ERROR_INSERT);
                 }
             }
@@ -75,16 +67,14 @@ public class MunicipioWindow {
             if (selectedRow != -1) {
                 try {
                     Integer id = Integer.parseInt(tableModel.getValueAt(selectedRow, 0).toString());
-                    String name = tableModel.getValueAt(selectedRow, 1).toString();
-                    String uf = tableModel.getValueAt(selectedRow, 2).toString();
-                    Municipio municipio = new Municipio(id, name, uf);
-                    if (openUpdateDialog(municipio)) {
-                        municipioRepository.update(municipio);
+                    String description = tableModel.getValueAt(selectedRow, 1).toString();
+                    Produto produto = new Produto(id, description);
+                    if (openUpdateDialog(produto)) {
+                        produtoRepository.update(produto);
                         loadData();
-                        MunicipioComboBox.reloadMunicipioComboBox();
+                        ProdutoComboBox.reloadProdutoComboBox();
                     }
                 } catch (Exception exception) {
-                    exception.printStackTrace();
                     new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.ERROR_UPDATE);
                 }
             }
@@ -98,25 +88,24 @@ public class MunicipioWindow {
                     WarningDialog warningDialog = new WarningDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.WARNING_DELETE);
                     if (warningDialog.isConfirmed()) {
                         Integer id = Integer.parseInt(tableModel.getValueAt(selectedRow, 0).toString());
-                        municipioRepository.delete(id);
+                        produtoRepository.delete(id);
                         tableModel.removeRow(selectedRow);
-                        MunicipioComboBox.reloadMunicipioComboBox();
+                        ProdutoComboBox.reloadProdutoComboBox();
                     }
                 } catch (SQLException ex) {
-                    ex.printStackTrace();
                     new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.ERROR_DELETE);
                 }
             }
         });
 
-        JButton reloadButton = new JButton("Recarregar");
-        reloadButton.addActionListener(e -> loadData());
+        JButton recarregarButton = new JButton("Recarregar");
+        recarregarButton.addActionListener(e -> loadData());
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         buttonPanel.add(addButton);
         buttonPanel.add(updateButton);
         buttonPanel.add(deleteButton);
-        buttonPanel.add(reloadButton);
+        buttonPanel.add(recarregarButton);
 
         formPanel.add(buttonPanel);
 
@@ -124,11 +113,10 @@ public class MunicipioWindow {
         loadData();
     }
 
-    private void addRow(Municipio municipio) {
+    private void addRow(Produto produto) {
         Vector<String> row = new Vector<>();
-        row.add(municipio.getId().toString());
-        row.add(municipio.getName());
-        row.add(municipio.getUf());
+        row.add(produto.getId().toString());
+        row.add(produto.getDescricao());
         tableModel.addRow(row);
     }
 
@@ -142,23 +130,22 @@ public class MunicipioWindow {
     private void loadData() {
         try {
             cleanTable();
-            java.util.List<Municipio> municipios = municipioRepository.findAll();
-            municipios.forEach(this::addRow);
+            java.util.List<Produto> produtos = produtoRepository.findAll();
+            produtos.forEach(this::addRow);
         } catch (Exception exception) {
             exception.printStackTrace();
             new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.ERROR_SELECT);
         }
     }
 
-    private boolean openUpdateDialog(Municipio municipio) {
-        MunicipioUpdate dialog = new MunicipioUpdate((Frame) SwingUtilities.getWindowAncestor(panel), municipio);
+    private boolean openUpdateDialog(Produto produto) {
+        ProdutoUpdate dialog = new ProdutoUpdate((Frame) SwingUtilities.getWindowAncestor(panel), produto);
         dialog.setVisible(true);
         return dialog.isUpdated();
     }
 
     private void clearFields() {
-        nameField.setText("");
-        ufField.setText("");
+        descriptionField.setText("");
     }
 
     public JPanel getPanel() {

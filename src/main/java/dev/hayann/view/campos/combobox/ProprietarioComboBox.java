@@ -13,9 +13,16 @@ public class ProprietarioComboBox {
 
     public static JComboBox<Proprietario> proprietarioComboBoxUpdate = new JComboBox<>();
 
+    public static JComboBox<Proprietario> proprietarioComboBoxPessoaJuridica = new JComboBox<>();
+
     public static JComboBox<Proprietario> getProprietarioComboBox() {
         reloadProprietarioComboBox();
         return proprietarioComboBox;
+    }
+
+    public static JComboBox<Proprietario> getProprietarioComboBoxPessoaJuridica() {
+        reloadProprietarioComboBox();
+        return proprietarioComboBoxPessoaJuridica;
     }
 
     public static JComboBox<Proprietario> getProprietarioComboBoxUpdate() {
@@ -26,15 +33,18 @@ public class ProprietarioComboBox {
     public static void reloadProprietarioComboBox() {
         proprietarioComboBox.removeAllItems();
         proprietarioComboBoxUpdate.removeAllItems();
+        proprietarioComboBoxPessoaJuridica.removeAllItems();
         ProprietarioRepository proprietarioRepository = new ProprietarioRepository();
         Proprietario proprietarioMock = new Proprietario(GenericMessages.DEFAULT_OPTION_COMBO_BOX, 0L, 0L, 0L);
         proprietarioComboBox.addItem(proprietarioMock);
         proprietarioComboBoxUpdate.addItem(proprietarioMock);
+        proprietarioComboBoxPessoaJuridica.addItem(proprietarioMock);
         try {
             List<Proprietario> proprietarios = proprietarioRepository.findAll();
             for (Proprietario proprietario : proprietarios) {
                 proprietarioComboBox.addItem(proprietario);
                 proprietarioComboBoxUpdate.addItem(proprietario);
+                proprietarioComboBoxPessoaJuridica.addItem(proprietario);
             }
         } catch (Exception e) {
             e.printStackTrace();

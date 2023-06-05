@@ -2,7 +2,6 @@ package dev.hayann.repository;
 
 import dev.hayann.database.ConnectionPool;
 import dev.hayann.model.Municipio;
-import dev.hayann.view.municipio.MunicipioUpdate;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

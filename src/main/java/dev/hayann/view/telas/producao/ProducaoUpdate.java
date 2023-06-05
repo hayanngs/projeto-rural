@@ -1,4 +1,4 @@
-package dev.hayann.view.producao;
+package dev.hayann.view.telas.producao;
 
 import dev.hayann.model.Producao;
 import dev.hayann.model.Produto;

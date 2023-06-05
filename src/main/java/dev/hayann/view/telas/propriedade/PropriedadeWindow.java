@@ -1,4 +1,4 @@
-package dev.hayann.view.propriedade;
+package dev.hayann.view.telas.propriedade;
 
 import dev.hayann.model.Municipio;
 import dev.hayann.model.Propriedade;

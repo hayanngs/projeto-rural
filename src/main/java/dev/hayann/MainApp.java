@@ -1,12 +1,13 @@
 package dev.hayann;
 
 import dev.hayann.database.InicializadorDoBD;
-import dev.hayann.view.municipio.MunicipioWindow;
-import dev.hayann.view.pessoafisica.PessoaFisicaWindow;
-import dev.hayann.view.producao.ProducaoWindow;
-import dev.hayann.view.produto.ProdutoWindow;
-import dev.hayann.view.propriedade.PropriedadeWindow;
-import dev.hayann.view.proprietario.ProprietarioWindow;
+import dev.hayann.view.telas.municipio.MunicipioWindow;
+import dev.hayann.view.telas.pessoafisica.PessoaFisicaWindow;
+import dev.hayann.view.telas.pessoajuridica.PessoaJuridicaWindow;
+import dev.hayann.view.telas.producao.ProducaoWindow;
+import dev.hayann.view.telas.produto.ProdutoWindow;
+import dev.hayann.view.telas.propriedade.PropriedadeWindow;
+import dev.hayann.view.telas.proprietario.ProprietarioWindow;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,6 +27,8 @@ public class MainApp extends JFrame {
 
     public static PessoaFisicaWindow pessoaFisicaWindow = new PessoaFisicaWindow();
 
+    public static PessoaJuridicaWindow pessoaJuridicaWindow = new PessoaJuridicaWindow();
+
     public MainApp() {
         setTitle("Gerenciamento Rural");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -40,6 +43,7 @@ public class MainApp extends JFrame {
         tabbedPane.addTab("Proprietario", proprietarioWindow.getPanel());
         tabbedPane.addTab("Produção", producaoWindow.getPanel());
         tabbedPane.addTab("Pessoa Física", pessoaFisicaWindow.getPanel());
+        tabbedPane.addTab("Pessoa Jurídica", pessoaJuridicaWindow.getPanel());
 
         add(tabbedPane, BorderLayout.CENTER);
 

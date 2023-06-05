@@ -1,4 +1,4 @@
-package dev.hayann.view.proprietario;
+package dev.hayann.view.telas.proprietario;
 
 import dev.hayann.model.Proprietario;
 import dev.hayann.view.campos.textfield.NumberTextField;

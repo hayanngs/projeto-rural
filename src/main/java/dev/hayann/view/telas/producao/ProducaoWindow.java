@@ -1,4 +1,4 @@
-package dev.hayann.view.producao;
+package dev.hayann.view.telas.producao;
 
 import dev.hayann.model.Producao;
 import dev.hayann.model.Produto;
@@ -250,6 +250,7 @@ public class ProducaoWindow {
             java.util.List<Producao> producoes = producaoRepository.findAll();
             producoes.forEach(this::addRow);
         } catch (Exception exception) {
+            exception.printStackTrace();
             new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.ERROR_SELECT);
         }
     }

@@ -1,4 +1,4 @@
-package dev.hayann.view.pessoafisica;
+package dev.hayann.view.telas.pessoafisica;
 
 import dev.hayann.model.PessoaFisica;
 import dev.hayann.view.campos.combobox.PessoaFisicaComboBox;
