@@ -1,6 +1,7 @@
 package dev.hayann;
 
 import dev.hayann.database.InicializadorDoBD;
+import dev.hayann.view.telas.donopessoajuridica.DonoPessoaJuridicaWindow;
 import dev.hayann.view.telas.municipio.MunicipioWindow;
 import dev.hayann.view.telas.pessoafisica.PessoaFisicaWindow;
 import dev.hayann.view.telas.pessoajuridica.PessoaJuridicaWindow;
@@ -29,6 +30,8 @@ public class MainApp extends JFrame {
 
     public static PessoaJuridicaWindow pessoaJuridicaWindow = new PessoaJuridicaWindow();
 
+    public static DonoPessoaJuridicaWindow donoPessoaJuridicaWindow = new DonoPessoaJuridicaWindow();
+
     public MainApp() {
         setTitle("Gerenciamento Rural");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -40,10 +43,11 @@ public class MainApp extends JFrame {
         tabbedPane.addTab("Município", municipioWindow.getPanel());
         tabbedPane.addTab("Produto", produtoWindow.getPanel());
         tabbedPane.addTab("Proprieade", propriedadeWindow.getPanel());
-        tabbedPane.addTab("Proprietario", proprietarioWindow.getPanel());
         tabbedPane.addTab("Produção", producaoWindow.getPanel());
+        tabbedPane.addTab("Proprietario", proprietarioWindow.getPanel());
         tabbedPane.addTab("Pessoa Física", pessoaFisicaWindow.getPanel());
         tabbedPane.addTab("Pessoa Jurídica", pessoaJuridicaWindow.getPanel());
+        tabbedPane.addTab("Dono Pessoa Jurídica", donoPessoaJuridicaWindow.getPanel());
 
         add(tabbedPane, BorderLayout.CENTER);
 

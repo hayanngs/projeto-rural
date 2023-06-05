@@ -4,6 +4,7 @@ import dev.hayann.model.PessoaJuridica;
 import dev.hayann.model.Proprietario;
 import dev.hayann.repository.PessoaJuridicaRepository;
 import dev.hayann.repository.ProdutoRepository;
+import dev.hayann.view.campos.combobox.PessoaJuridicaComboBox;
 import dev.hayann.view.campos.combobox.ProprietarioComboBox;
 import dev.hayann.view.campos.textfield.DateTextField;
 import dev.hayann.view.campos.textfield.NumberTextField;
@@ -98,6 +99,7 @@ public class PessoaJuridicaWindow {
                         pessoaJuridicaRepository.persist(pessoaJuridica);
                         addRow(pessoaJuridica);
                         clearFields();
+                        PessoaJuridicaComboBox.reloadPessoaJuridicaComboBox();
                     } catch (Exception exception) {
                         exception.printStackTrace();
                         new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.ERROR_INSERT);
@@ -124,6 +126,7 @@ public class PessoaJuridicaWindow {
                     if (openUpdateDialog(pessoaJuridica)) {
                         pessoaJuridicaRepository.update(pessoaJuridica);
                         loadData();
+                        PessoaJuridicaComboBox.reloadPessoaJuridicaComboBox();
                     }
                 } catch (Exception exception) {
                     exception.printStackTrace();
@@ -142,6 +145,7 @@ public class PessoaJuridicaWindow {
                         Integer id = Integer.parseInt(tableModel.getValueAt(selectedRow, 0).toString());
                         pessoaJuridicaRepository.delete(id);
                         tableModel.removeRow(selectedRow);
+                        PessoaJuridicaComboBox.reloadPessoaJuridicaComboBox();
                     }
                 } catch (SQLException ex) {
                     ex.printStackTrace();

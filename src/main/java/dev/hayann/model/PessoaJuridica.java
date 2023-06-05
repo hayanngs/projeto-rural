@@ -60,4 +60,9 @@ public class PessoaJuridica {
     public void setDateCreation(LocalDate dateCreation) {
         this.dateCreation = dateCreation;
     }
+
+    @Override
+    public String toString() {
+        return razaoSocial;
+    }
 }
