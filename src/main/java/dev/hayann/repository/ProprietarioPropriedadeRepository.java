@@ -3,10 +3,7 @@ package dev.hayann.repository;
 import dev.hayann.database.ConnectionPool;
 import dev.hayann.model.ProprietarioPropriedade;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,5 +81,20 @@ public class ProprietarioPropriedadeRepository implements Repository<Proprietari
         } catch (Exception e) {
             /* TODO: Criar método de render de erro para renderizar um JDialog de erro na tela */
         }
+    }
+
+    public void delete(Integer idProprietario, Integer idPropriedade) throws SQLException {
+        String sql = String.format(
+                "DELETE FROM %s WHERE %s = ? AND %s = ?",
+                ProprietarioPropriedade.TABLE_NAME,
+                ProprietarioPropriedade.COLLUMN_ID_PROPRIETARIO_NAME,
+                ProprietarioPropriedade.COLLUMN_ID_PROPRIEDADE_NAME
+        );
+        ConnectionPool connectionPool = ConnectionPool.getInstance();
+        Connection connection = connectionPool.getConnection();
+        PreparedStatement stmt = connection.prepareStatement(sql);
+        stmt.setInt(1, idProprietario);
+        stmt.setInt(2, idPropriedade);
+        stmt.executeUpdate();
     }
 }

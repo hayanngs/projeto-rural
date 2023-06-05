@@ -11,9 +11,9 @@ public class ProprietarioComboBox {
 
     public static JComboBox<Proprietario> proprietarioComboBox = new JComboBox<>();
 
-    public static JComboBox<Proprietario> proprietarioComboBoxUpdate = new JComboBox<>();
-
     public static JComboBox<Proprietario> proprietarioComboBoxPessoaJuridica = new JComboBox<>();
+
+    public static JComboBox<Proprietario> proprietarioPropriedadeComboBox = new JComboBox<>();
 
     public static JComboBox<Proprietario> getProprietarioComboBox() {
         reloadProprietarioComboBox();
@@ -25,25 +25,25 @@ public class ProprietarioComboBox {
         return proprietarioComboBoxPessoaJuridica;
     }
 
-    public static JComboBox<Proprietario> getProprietarioComboBoxUpdate() {
+    public static JComboBox<Proprietario> getProprietarioPropriedadeComboBox() {
         reloadProprietarioComboBox();
-        return proprietarioComboBoxUpdate;
+        return proprietarioPropriedadeComboBox;
     }
 
     public static void reloadProprietarioComboBox() {
         proprietarioComboBox.removeAllItems();
-        proprietarioComboBoxUpdate.removeAllItems();
+        proprietarioPropriedadeComboBox.removeAllItems();
         proprietarioComboBoxPessoaJuridica.removeAllItems();
         ProprietarioRepository proprietarioRepository = new ProprietarioRepository();
         Proprietario proprietarioMock = new Proprietario(GenericMessages.DEFAULT_OPTION_COMBO_BOX, 0L, 0L, 0L);
         proprietarioComboBox.addItem(proprietarioMock);
-        proprietarioComboBoxUpdate.addItem(proprietarioMock);
+        proprietarioPropriedadeComboBox.addItem(proprietarioMock);
         proprietarioComboBoxPessoaJuridica.addItem(proprietarioMock);
         try {
             List<Proprietario> proprietarios = proprietarioRepository.findAll();
             for (Proprietario proprietario : proprietarios) {
                 proprietarioComboBox.addItem(proprietario);
-                proprietarioComboBoxUpdate.addItem(proprietario);
+                proprietarioPropriedadeComboBox.addItem(proprietario);
                 proprietarioComboBoxPessoaJuridica.addItem(proprietario);
             }
         } catch (Exception e) {
