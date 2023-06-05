@@ -9,6 +9,7 @@ java {
 
 group = 'dev.hayann'
 version = '1.0-SNAPSHOT'
+def mainClassName = "MainApp"
 
 repositories {
     mavenCentral()
@@ -22,4 +23,10 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+jar {
+    manifest {
+        attributes("Main-Class" : "${project.group}.$mainClassName")
+    }
 }

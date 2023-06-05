@@ -3,9 +3,7 @@ package dev.hayann.repository;
 import dev.hayann.database.ConnectionPool;
 import dev.hayann.model.Produto;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,54 +30,74 @@ public class ProdutoRepository implements Repository<Produto> {
         }
     }
 
-    public List<Produto> findAll() {
-        try {
-            String sql = String.format("SELECT * FROM %s", Produto.TABLE_NAME);
-            ArrayList<Produto> produtos = new ArrayList<>();
-            ConnectionPool connectionPool = ConnectionPool.getInstance();
-            Connection connection = connectionPool.getConnection();
-            ResultSet resultSet = connection.createStatement().executeQuery(sql);
-            while (resultSet.next()) {
-                produtos.add(new Produto(
-                        resultSet.getInt(Produto.COLLUMN_ID_NAME),
-                        resultSet.getString(Produto.COLLUMN_DESCRIPTION_NAME)
-                ));
-            }
-            connectionPool.releaseConnection(connection);
-            return produtos;
-        } catch (Exception e) {
-            e.printStackTrace();
-            /* TODO: Criar método de render de erro para renderizar um JDialog de erro na tela */
-            return null;
+    public Produto findByDescricao(String descricao) throws SQLException {
+        String sql = String.format(
+                "SELECT * " +
+                        "FROM %s " +
+                        "WHERE %s ILIKE '%%%s%%'",
+                Produto.TABLE_NAME,
+                Produto.COLLUMN_DESCRIPTION_NAME,
+                descricao
+        );
+        ConnectionPool connectionPool = ConnectionPool.getInstance();
+        Connection connection = connectionPool.getConnection();
+        ResultSet resultSet = connection.createStatement().executeQuery(sql);
+        if (resultSet.next()) {
+            return new Produto(
+                    resultSet.getInt(Produto.COLLUMN_ID_NAME),
+                    resultSet.getString(Produto.COLLUMN_DESCRIPTION_NAME)
+            );
         }
+        connectionPool.releaseConnection(connection);
+        return null;
     }
 
-    public void persist(Produto produto) {
-        try {
-            String sql = String.format("INSERT INTO %s (%s) VALUES (?)", Produto.TABLE_NAME, Produto.COLLUMN_DESCRIPTION_NAME);
-            ConnectionPool connectionPool = ConnectionPool.getInstance();
-            Connection connection = connectionPool.getConnection();
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setString(1, produto.getDescricao());
-            stmt.executeUpdate();
-            connectionPool.releaseConnection(connection);
-        } catch (Exception e) {
-            /* TODO: Criar método de render de erro para renderizar um JDialog de erro na tela */
+    public List<Produto> findAll() throws SQLException {
+        String sql = String.format("SELECT * FROM %s ORDER BY %s", Produto.TABLE_NAME, Produto.COLLUMN_ID_NAME);
+        ArrayList<Produto> produtos = new ArrayList<>();
+        ConnectionPool connectionPool = ConnectionPool.getInstance();
+        Connection connection = connectionPool.getConnection();
+        ResultSet resultSet = connection.createStatement().executeQuery(sql);
+        while (resultSet.next()) {
+            produtos.add(new Produto(
+                    resultSet.getInt(Produto.COLLUMN_ID_NAME),
+                    resultSet.getString(Produto.COLLUMN_DESCRIPTION_NAME)
+            ));
         }
+        connectionPool.releaseConnection(connection);
+        return produtos;
     }
 
-    public void update(Produto produto) {
-        try {
-            String sql = String.format("UPDATE %s SET %s = ? WHERE %s = ?", Produto.TABLE_NAME, Produto.COLLUMN_DESCRIPTION_NAME, Produto.COLLUMN_ID_NAME);
-            ConnectionPool connectionPool = ConnectionPool.getInstance();
-            Connection connection = connectionPool.getConnection();
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setString(1, produto.getDescricao());
-            stmt.setInt(2, produto.getId());
-            stmt.executeUpdate();
-            connectionPool.releaseConnection(connection);
-        } catch (Exception e) {
-            /* TODO: Criar método de render de erro para renderizar um JDialog de erro na tela */
+    public void persist(Produto produto) throws SQLException {
+        String sql = String.format("INSERT INTO %s (%s) VALUES (?) RETURNING %s", Produto.TABLE_NAME, Produto.COLLUMN_DESCRIPTION_NAME, Produto.COLLUMN_ID_NAME);
+        ConnectionPool connectionPool = ConnectionPool.getInstance();
+        Connection connection = connectionPool.getConnection();
+        PreparedStatement stmt = connection.prepareStatement(sql);
+        stmt.setString(1, produto.getDescricao());
+        ResultSet resultSet = stmt.executeQuery();
+        if (resultSet.next()) {
+            produto.setId(resultSet.getInt(Produto.COLLUMN_ID_NAME));
         }
+        connectionPool.releaseConnection(connection);
+    }
+
+    public void update(Produto produto) throws SQLException {
+        String sql = String.format("UPDATE %s SET %s = ? WHERE %s = ?", Produto.TABLE_NAME, Produto.COLLUMN_DESCRIPTION_NAME, Produto.COLLUMN_ID_NAME);
+        ConnectionPool connectionPool = ConnectionPool.getInstance();
+        Connection connection = connectionPool.getConnection();
+        PreparedStatement stmt = connection.prepareStatement(sql);
+        stmt.setString(1, produto.getDescricao());
+        stmt.setInt(2, produto.getId());
+        stmt.executeUpdate();
+        connectionPool.releaseConnection(connection);
+    }
+
+    public void delete(Integer id) throws SQLException {
+        String sql = String.format("DELETE FROM %s WHERE %s = ?", Produto.TABLE_NAME, Produto.COLLUMN_ID_NAME);
+        ConnectionPool connectionPool = ConnectionPool.getInstance();
+        Connection connection = connectionPool.getConnection();
+        PreparedStatement stmt = connection.prepareStatement(sql);
+        stmt.setInt(1, id);
+        stmt.executeUpdate();
     }
 }
