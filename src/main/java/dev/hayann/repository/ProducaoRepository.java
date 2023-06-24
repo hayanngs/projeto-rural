@@ -1,6 +1,7 @@
 package dev.hayann.repository;
 
 import dev.hayann.database.ConnectionPool;
+import dev.hayann.dto.ProducaoAnualDTO;
 import dev.hayann.model.*;
 
 import java.sql.*;
@@ -9,33 +10,44 @@ import java.util.List;
 
 public class ProducaoRepository implements Repository<Producao> {
 
-//    public Producao findById(int idPropriedade, int idProduto) {
-//        try {
-//            String sql = String.format("SELECT * FROM %s WHERE %s = ? AND %s = ?", Producao.TABLE_NAME, Producao.COLLUMN_ID_PROPRIEDADE_NAME, Producao.COLLUMN_ID_PRODUTO_NAME);
-//            ConnectionPool connectionPool = ConnectionPool.getInstance();
-//            Connection connection = connectionPool.getConnection();
-//            PreparedStatement stmt = connection.prepareStatement(sql);
-//            stmt.setInt(1, idPropriedade);
-//            stmt.setInt(2, idProduto);
-//            ResultSet resultSet = stmt.executeQuery();
-//            connectionPool.releaseConnection(connection);
-//            if (resultSet.next()) {
-//                return new Producao(
-//                        resultSet.getInt(Producao.COLLUMN_ID_PROPRIEDADE_NAME),
-//                        resultSet.getInt(Producao.COLLUMN_ID_PRODUTO_NAME),
-//                        resultSet.getDate(Producao.COLLUMN_DATA_INICIO_PROV_COLHEITA_NAME).toLocalDate(),
-//                        resultSet.getDate(Producao.COLLUMN_DATA_FIM_PROV_COLHEITA_NAME).toLocalDate(),
-//                        resultSet.getDouble(Producao.COLLUMN_QTD_PROV_COLHIDA_NAME),
-//                        resultSet.getDate(Producao.COLLUMN_DATA_INICIO_REAL_COLHEITA_NAME).toLocalDate(),
-//                        resultSet.getDate(Producao.COLLUMN_DATA_FIM_REAL_COLHEITA_NAME).toLocalDate(),
-//                        resultSet.getDouble(Producao.COLLUMN_QTD_REAL_COLHIDA_NAME)
-//                );
-//            } else return null;
-//        } catch (Exception e) {
-//            /* TODO: Criar método de render de erro para renderizar um JDialog de erro na tela */
-//            return null;
-//        }
-//    }
+    public ArrayList<ProducaoAnualDTO> findProducaoAnual() throws SQLException {
+        String sql = String.format("SELECT p3.%s, p3.%s, p2.%s, sum(p.%s) " +
+                        "FROM %s p " +
+                        "INNER JOIN %s p2 on p2.%s = p.%s " +
+                        "INNER JOIN %s p3 on p3.%s = p.%s " +
+                        "WHERE EXTRACT(YEAR FROM p.%s) = 2023 " +
+                        "GROUP BY p3.%s, p3.%s, p2.%s",
+                Propriedade.COLLUMN_NAME_NAME,
+                Propriedade.COLLUMN_AREA_PROPRIEDADE_NAME,
+                Produto.COLLUMN_DESCRIPTION_NAME,
+                Producao.COLLUMN_QTD_REAL_COLHIDA_NAME,
+                Producao.TABLE_NAME,
+                Produto.TABLE_NAME,
+                Produto.COLLUMN_ID_NAME,
+                Producao.COLLUMN_ID_PRODUTO_NAME,
+                Propriedade.TABLE_NAME,
+                Propriedade.COLLUMN_ID_NAME,
+                Producao.COLLUMN_ID_PROPRIEDADE_NAME,
+                Producao.COLLUMN_DATA_FIM_REAL_COLHEITA_NAME,
+                Propriedade.COLLUMN_NAME_NAME,
+                Propriedade.COLLUMN_AREA_PROPRIEDADE_NAME,
+                Produto.COLLUMN_DESCRIPTION_NAME
+        );
+        ConnectionPool connectionPool = ConnectionPool.getInstance();
+        Connection connection = connectionPool.getConnection();
+        ResultSet resultSet = connection.createStatement().executeQuery(sql);
+        connectionPool.releaseConnection(connection);
+        ArrayList<ProducaoAnualDTO> producaoAnualDTOList = new ArrayList<>();
+        while (resultSet.next()) {
+            producaoAnualDTOList.add(new ProducaoAnualDTO(
+                    resultSet.getString(Propriedade.COLLUMN_NAME_NAME),
+                    resultSet.getDouble(Propriedade.COLLUMN_AREA_PROPRIEDADE_NAME),
+                    resultSet.getString(Produto.COLLUMN_DESCRIPTION_NAME),
+                    resultSet.getDouble("sum")
+            ));
+        }
+        return producaoAnualDTOList;
+    }
 
     public List<Producao> findAll() throws SQLException {
         String sql = String.format("""
@@ -112,33 +124,33 @@ public class ProducaoRepository implements Repository<Producao> {
     }
 
     public void persist(Producao producao) throws SQLException {
-            String sql = String.format("INSERT INTO %s (%s, %s, %s, %s, %s, %s, %s, %s) VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING %s", Producao.TABLE_NAME,
-                    Producao.COLLUMN_ID_PROPRIEDADE_NAME,
-                    Producao.COLLUMN_ID_PRODUTO_NAME,
-                    Producao.COLLUMN_DATA_INICIO_PROV_COLHEITA_NAME,
-                    Producao.COLLUMN_DATA_FIM_PROV_COLHEITA_NAME,
-                    Producao.COLLUMN_QTD_PROV_COLHIDA_NAME,
-                    Producao.COLLUMN_DATA_INICIO_REAL_COLHEITA_NAME,
-                    Producao.COLLUMN_DATA_FIM_REAL_COLHEITA_NAME,
-                    Producao.COLLUMN_QTD_REAL_COLHIDA_NAME,
-                    Producao.COLLUMN_ID_NAME
-            );
-            ConnectionPool connectionPool = ConnectionPool.getInstance();
-            Connection connection = connectionPool.getConnection();
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, producao.getPropriedade().getId());
-            stmt.setInt(2, producao.getProduto().getId());
-            stmt.setDate(3, Date.valueOf(producao.getDataInicioColheitaProv()));
-            stmt.setDate(4, Date.valueOf(producao.getDataFimColheitaProv()));
-            stmt.setDouble(5, producao.getQtdProvColhida());
-            stmt.setDate(6, Date.valueOf(producao.getDataInicioColheitaReal()));
-            stmt.setDate(7, Date.valueOf(producao.getDataFimColheitaReal()));
-            stmt.setDouble(8, producao.getQtdRealColhida());
-            ResultSet resultSet = stmt.executeQuery();
-            if (resultSet.next()) {
-                producao.setId(resultSet.getInt(Producao.COLLUMN_ID_NAME));
-            }
-            connectionPool.releaseConnection(connection);
+        String sql = String.format("INSERT INTO %s (%s, %s, %s, %s, %s, %s, %s, %s) VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING %s", Producao.TABLE_NAME,
+                Producao.COLLUMN_ID_PROPRIEDADE_NAME,
+                Producao.COLLUMN_ID_PRODUTO_NAME,
+                Producao.COLLUMN_DATA_INICIO_PROV_COLHEITA_NAME,
+                Producao.COLLUMN_DATA_FIM_PROV_COLHEITA_NAME,
+                Producao.COLLUMN_QTD_PROV_COLHIDA_NAME,
+                Producao.COLLUMN_DATA_INICIO_REAL_COLHEITA_NAME,
+                Producao.COLLUMN_DATA_FIM_REAL_COLHEITA_NAME,
+                Producao.COLLUMN_QTD_REAL_COLHIDA_NAME,
+                Producao.COLLUMN_ID_NAME
+        );
+        ConnectionPool connectionPool = ConnectionPool.getInstance();
+        Connection connection = connectionPool.getConnection();
+        PreparedStatement stmt = connection.prepareStatement(sql);
+        stmt.setInt(1, producao.getPropriedade().getId());
+        stmt.setInt(2, producao.getProduto().getId());
+        stmt.setDate(3, Date.valueOf(producao.getDataInicioColheitaProv()));
+        stmt.setDate(4, Date.valueOf(producao.getDataFimColheitaProv()));
+        stmt.setDouble(5, producao.getQtdProvColhida());
+        stmt.setDate(6, Date.valueOf(producao.getDataInicioColheitaReal()));
+        stmt.setDate(7, Date.valueOf(producao.getDataFimColheitaReal()));
+        stmt.setDouble(8, producao.getQtdRealColhida());
+        ResultSet resultSet = stmt.executeQuery();
+        if (resultSet.next()) {
+            producao.setId(resultSet.getInt(Producao.COLLUMN_ID_NAME));
+        }
+        connectionPool.releaseConnection(connection);
     }
 
     public void update(Producao producao) throws SQLException {
