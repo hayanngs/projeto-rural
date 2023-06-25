@@ -92,7 +92,7 @@ public class PessoaJuridicaWindow {
                     try {
                         PessoaJuridica pessoaJuridica = new PessoaJuridica(
                                 Integer.parseInt(idProprietario),
-                                Integer.parseInt(CNPJ),
+                                Long.parseLong(CNPJ),
                                 razaoSocial,
                                 LocalDate.parse(dataCriacao, formatter)
                         );
@@ -119,7 +119,7 @@ public class PessoaJuridicaWindow {
                     String dataCriacao = tableModel.getValueAt(selectedRow, 3).toString();
                     PessoaJuridica pessoaJuridica = new PessoaJuridica(
                             Integer.parseInt(idProprietario),
-                            Integer.parseInt(CNPJ),
+                            Long.parseLong(CNPJ),
                             razaoSocial,
                             LocalDate.parse(dataCriacao, formatter)
                     );

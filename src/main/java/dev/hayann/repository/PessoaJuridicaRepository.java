@@ -21,7 +21,7 @@ public class PessoaJuridicaRepository implements Repository<PessoaJuridica> {
             if (resultSet.next()) {
                 return new PessoaJuridica(
                         resultSet.getInt(PessoaJuridica.COLLUMN_ID_PROPRIETARIO_NAME),
-                        resultSet.getInt(PessoaJuridica.COLLUMN_CNPJ_NAME),
+                        resultSet.getLong(PessoaJuridica.COLLUMN_CNPJ_NAME),
                         resultSet.getString(PessoaJuridica.COLLUMN_RAZAO_SOCIAL_NAME),
                         resultSet.getDate(PessoaJuridica.COLUMN_DATA_CRIACAO_NAME).toLocalDate()
                 );
@@ -41,7 +41,7 @@ public class PessoaJuridicaRepository implements Repository<PessoaJuridica> {
         while (resultSet.next()) {
             producoes.add(new PessoaJuridica(
                     resultSet.getInt(PessoaJuridica.COLLUMN_ID_PROPRIETARIO_NAME),
-                    resultSet.getInt(PessoaJuridica.COLLUMN_CNPJ_NAME),
+                    resultSet.getLong(PessoaJuridica.COLLUMN_CNPJ_NAME),
                     resultSet.getString(PessoaJuridica.COLLUMN_RAZAO_SOCIAL_NAME),
                     resultSet.getDate(PessoaJuridica.COLUMN_DATA_CRIACAO_NAME).toLocalDate()
             ));
@@ -61,7 +61,7 @@ public class PessoaJuridicaRepository implements Repository<PessoaJuridica> {
         Connection connection = connectionPool.getConnection();
         PreparedStatement stmt = connection.prepareStatement(sql);
         stmt.setInt(1, pessoaJuridica.getId());
-        stmt.setInt(2, pessoaJuridica.getCnpj());
+        stmt.setLong(2, pessoaJuridica.getCnpj());
         stmt.setString(3, pessoaJuridica.getRazaoSocial());
         stmt.setDate(4, Date.valueOf(pessoaJuridica.getDateCreation()));
         stmt.executeUpdate();
@@ -78,7 +78,7 @@ public class PessoaJuridicaRepository implements Repository<PessoaJuridica> {
         ConnectionPool connectionPool = ConnectionPool.getInstance();
         Connection connection = connectionPool.getConnection();
         PreparedStatement stmt = connection.prepareStatement(sql);
-        stmt.setInt(1, pessoaJuridica.getCnpj());
+        stmt.setLong(1, pessoaJuridica.getCnpj());
         stmt.setString(2, pessoaJuridica.getRazaoSocial());
         stmt.setDate(3, Date.valueOf(pessoaJuridica.getDateCreation()));
         stmt.setInt(4, pessoaJuridica.getId());

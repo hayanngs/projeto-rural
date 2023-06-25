@@ -16,13 +16,13 @@ public class PessoaJuridica {
 
     private Integer id;
 
-    private Integer cnpj;
+    private Long cnpj;
 
     private String razaoSocial;
 
     private LocalDate dateCreation;
 
-    public PessoaJuridica(Integer id, Integer cnpj, String razaoSocial, LocalDate dateCreation) {
+    public PessoaJuridica(Integer id, Long cnpj, String razaoSocial, LocalDate dateCreation) {
         this.id = id;
         this.cnpj = cnpj;
         this.razaoSocial = razaoSocial;
@@ -37,11 +37,11 @@ public class PessoaJuridica {
         this.id = id;
     }
 
-    public Integer getCnpj() {
+    public Long getCnpj() {
         return cnpj;
     }
 
-    public void setCnpj(Integer cnpj) {
+    public void setCnpj(Long cnpj) {
         this.cnpj = cnpj;
     }
 

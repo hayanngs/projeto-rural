@@ -22,7 +22,7 @@ public class PessoaJuridicaComboBox {
         PessoaJuridicaRepository pessoaJuridicaRepository = new PessoaJuridicaRepository();
         try {
             List<PessoaJuridica> pessoaJuridicas = pessoaJuridicaRepository.findAll();
-            PessoaJuridica pessoaJuridicaMock = new PessoaJuridica(0, 0, GenericMessages.DEFAULT_OPTION_COMBO_BOX, LocalDate.now());
+            PessoaJuridica pessoaJuridicaMock = new PessoaJuridica(0, 0L, GenericMessages.DEFAULT_OPTION_COMBO_BOX, LocalDate.now());
             pessoaJuridicaProprietarioComboBox.addItem(pessoaJuridicaMock);
             for (PessoaJuridica pessoaJuridica : pessoaJuridicas) {
                 pessoaJuridicaProprietarioComboBox.addItem(pessoaJuridica);

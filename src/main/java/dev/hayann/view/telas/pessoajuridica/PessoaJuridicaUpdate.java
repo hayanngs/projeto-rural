@@ -70,7 +70,7 @@ public class PessoaJuridicaUpdate extends JDialog {
                     new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(parent), GenericMessages.ERROR_INCOMPLETE_FIELD);
                 } else {
                     pessoaJuridica.setRazaoSocial(razaoSocial);
-                    pessoaJuridica.setCnpj(Integer.parseInt(CNPJ));
+                    pessoaJuridica.setCnpj(Long.parseLong(CNPJ));
                     pessoaJuridica.setDateCreation(LocalDate.parse(dataCriacao, formatter));
                     salvo = true;
                     dispose();

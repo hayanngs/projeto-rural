@@ -72,8 +72,10 @@ public class ProprietarioPropriedadeWindow {
                     || propriedadeComboBox.getSelectedItem() == null || propriedadeComboBox.getSelectedIndex() == 0) {
                 new ErrorDialog((JFrame) SwingUtilities.getWindowAncestor(panel), GenericMessages.PROPRIETARIO_EMPTY_COMBO_BOX_ERROR);
             } else {
-                String idProprietario = ((Proprietario) Objects.requireNonNull(proprietarioComboBox.getSelectedItem())).getId().toString();
-                String idPropriedade = ((Propriedade) Objects.requireNonNull(propriedadeComboBox.getSelectedItem())).getId().toString();
+                Proprietario proprietario = ((Proprietario) Objects.requireNonNull(proprietarioComboBox.getSelectedItem()));
+                String idProprietario = proprietario.getId().toString();
+                Propriedade propriedade = ((Propriedade) Objects.requireNonNull(propriedadeComboBox.getSelectedItem()));
+                String idPropriedade = propriedade.getId().toString();
                 String dataAquisicao = dataAquisicaoField.getText();
 
                 if (idProprietario.isEmpty() || idPropriedade.isEmpty() || dataAquisicao.isEmpty()) {
@@ -81,8 +83,8 @@ public class ProprietarioPropriedadeWindow {
                 } else {
                     try {
                         ProprietarioPropriedade proprietarioPropriedade = new ProprietarioPropriedade(
-                                Integer.parseInt(idProprietario),
                                 Integer.parseInt(idPropriedade),
+                                Integer.parseInt(idProprietario),
                                 LocalDate.parse(dataAquisicao, formatter)
                         );
                         proprietarioPropriedadeRepository.persist(proprietarioPropriedade);

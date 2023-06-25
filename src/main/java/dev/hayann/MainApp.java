@@ -11,6 +11,7 @@ import dev.hayann.view.telas.produto.ProdutoWindow;
 import dev.hayann.view.telas.propriedade.PropriedadeWindow;
 import dev.hayann.view.telas.proprietario.ProprietarioWindow;
 import dev.hayann.view.telas.proprietariopropriedade.ProprietarioPropriedadeWindow;
+import dev.hayann.view.telas.questao2.Questao2Window;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,6 +39,8 @@ public class MainApp extends JFrame {
 
     public static ProducaoAnualWindow producaoAnualWindow = new ProducaoAnualWindow();
 
+    public static Questao2Window questao2Window = new Questao2Window();
+
     public MainApp() {
         setTitle("Gerenciamento Rural");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -56,6 +59,7 @@ public class MainApp extends JFrame {
         tabbedPane.addTab("Dono Pessoa Jurídica", donoPessoaJuridicaWindow.getPanel());
         tabbedPane.addTab("Proprietario Propriedade", proprietarioPropriedadeWindow.getPanel());
         tabbedPane.addTab("Produção Anual", producaoAnualWindow.getPanel());
+        tabbedPane.addTab("Questão 2", questao2Window.getPanel());
 
         add(tabbedPane, BorderLayout.CENTER);
 
